@@ -39,3 +39,4 @@ public class WinTrigger : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1); // Load next scene
     }
 }
+
