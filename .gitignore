@@ -20,3 +20,17 @@ Packages/com.unity.collab-proxy/
 # Ignore OS-specific files
 .DS_Store
 Thumbs.db
+
+# Ignore JetBrains Rider files (hvis du eller andre bruger det)
+.idea/
+*.iml
+
+# Ignore Visual Studio Code files
+.vscode/
+*.code-workspace
+
+# Ignore Unity auto-generated metadata
+/Assets/Plugins/Editor/.meta
+/Assets/StreamingAssets/.meta
+/ProjectSettings/EditorBuildSettings.asset
+
