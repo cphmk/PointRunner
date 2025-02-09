@@ -1,0 +1,22 @@
+# Ignore Unity-generated files
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]serSettings/
+Packages/com.unity.package-manager/ 
+Packages/com.unity.collab-proxy/
+
+# Ignore Visual Studio-specific files
+.vs/
+*.sln
+*.csproj
+*.pidb
+*.user
+*.unityproj
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
