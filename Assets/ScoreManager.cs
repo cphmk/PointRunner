@@ -31,6 +31,13 @@ public class ScoreManager : MonoBehaviour
         UpdateScoreUI();
     }
 
+
+
+     public int GetScore()
+     {
+       return score; // Returns the current score
+     }
+
     private void UpdateScoreUI()
     {
         if (scoreText != null)
