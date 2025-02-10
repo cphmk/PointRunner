@@ -28,6 +28,7 @@ public class PlayerHealth : MonoBehaviour
         if (currentHealth <= 0) // Lower than 0, and the player will die
         {
             Die();
+             
         }
     }
 
