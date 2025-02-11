@@ -30,6 +30,11 @@ public class MazeGenerator : MonoBehaviour
 
     void Start()
     {
+        if (maze_w > 80)
+            maze_w = 80;
+        if (maze_h > 80)
+            maze_h = 80;
+
         floor_transf = floor.GetComponent<Transform>();
         minimap_cam = GameObject.Find("MiniMapCamera");
         minimap_marker = Instantiate(minimap_marker_prefab, new Vector3(0, 0, 0), Quaternion.identity, transform);
@@ -113,8 +118,8 @@ public class MazeGenerator : MonoBehaviour
         Mesh mesh_for_collider = new Mesh();
         mesh_for_collider.vertices = vertices.ToArray();
         mesh_for_collider.triangles = triangles.ToArray();
-        mesh_for_collider.RecalculateNormals();
         mesh_for_collider.RecalculateBounds();
+        mesh_for_collider.RecalculateNormals();
         mesh_collider.sharedMesh = mesh_for_collider;
     }
 
