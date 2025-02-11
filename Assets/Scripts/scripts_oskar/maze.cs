@@ -8,23 +8,47 @@ public class MazeGenerator : MonoBehaviour
     public GameObject floor;
     public GameObject wall_prefab;
     public GameObject player_prefab;
+    public GameObject minimap_marker_prefab;
     public int maze_w, maze_h;
     public int wall_w, wall_h;
+    public int minimap_cam_distance;
 
     Maze maze;
     List<GameObject> walls = new List<GameObject>();
     GameObject player;
+    GameObject minimap_cam;
+    GameObject minimap_marker;
+
+    Mesh mesh;
+    MeshFilter mesh_filter;
+    List<Vector3> vertices = new List<Vector3>();
+    List<int> triangles = new List<int>();
+    List<Vector2> uvs = new List<Vector2>();
 
     void Start()
     {
+        // TODO: fix so no vertex count bottleneck
+        if (maze_w > 29)
+            maze_w = 29;
+        if (maze_h > 29)
+            maze_h = 29;
+
+        minimap_cam = GameObject.Find("MiniMapCamera");
+        minimap_marker = Instantiate(minimap_marker_prefab, new Vector3(0, 0, 0), Quaternion.identity, transform);
+        mesh_filter = GetComponent<MeshFilter>();
+        mesh = GetComponent<MeshFilter>().mesh;
         RegenMaze();
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.N)) {
+        if (Input.GetKeyDown(KeyCode.R)) {
             RegenMaze();
         }
+
+        Vector3 player_pos = player.GetComponent<Transform>().position;
+        minimap_cam.GetComponent<Transform>().position = new Vector3(player_pos.x, player_pos.y + minimap_cam_distance, player_pos.z);
+        minimap_marker.GetComponent<Transform>().position = new Vector3(player_pos.x, player_pos.y + minimap_cam_distance - 10, player_pos.z);
     }
 
     void RegenMaze()
@@ -34,16 +58,22 @@ public class MazeGenerator : MonoBehaviour
             Destroy(w);
         }
         walls.Clear();
+        vertices.Clear();
+        triangles.Clear();
+        uvs.Clear();
 
         maze = new Maze(maze_w, maze_h);
         maze.Gen();
 
+        string ss = "";
+        string ts = "";
         for (int y = 0; y < maze.height_real; ++y) {
             for (int x = 0; x < maze.width_real; ++x) {
                 if (y == maze.start.y * 2 + 1 && x == maze.start.x * 2 + 1) {
-                    player = Instantiate(player_prefab, new Vector3(x * wall_w, floor.GetComponent<Transform>().position.y + wall_h / 2.0f, y * wall_w),
+                    player = Instantiate(player_prefab, new Vector3(x * wall_w,
+                                floor.GetComponent<Transform>().position.y + (wall_h / 2.0f) * 20, y * wall_w),
                         Quaternion.identity, transform);
-                    player.GetComponent<Transform>().localScale = new Vector3(wall_w, wall_h, wall_w);
+                    // player.GetComponent<Transform>().localScale = new Vector3(wall_w, wall_h, wall_w);
 
                 }
                 if (maze.walls[x, y])
@@ -52,9 +82,33 @@ public class MazeGenerator : MonoBehaviour
                         new Vector3(x * wall_w, floor.GetComponent<Transform>().position.y + wall_h / 2.0f, y * wall_w),
                         Quaternion.identity, transform);
                 new_wall.transform.localScale = new Vector3(wall_w, wall_h, wall_w);
-                walls.Add(new_wall);
+
+                foreach (var t in new_wall.GetComponent<MeshFilter>().mesh.triangles) {
+                    triangles.Add(t + vertices.Count);
+                }
+
+                foreach (var v in new_wall.GetComponent<MeshFilter>().mesh.vertices) {
+                    vertices.Add(new Vector3(v.x * wall_w + x * wall_w,
+                                v.y * wall_h + floor.GetComponent<Transform>().position.y + wall_h / 2.0f,
+                                v.z * wall_w + y * wall_w));
+                }
+
+                foreach (var uv in new_wall.GetComponent<MeshFilter>().mesh.uv) {
+                    uvs.Add(uv);
+                }
+
+                Destroy(new_wall);
             }
         }
+
+        mesh.Clear();
+
+        mesh.vertices = vertices.ToArray();
+        mesh.triangles = triangles.ToArray();
+        mesh.uv = uvs.ToArray();
+
+        mesh.RecalculateBounds();
+        mesh.RecalculateNormals();
     }
 }
 
@@ -87,26 +141,14 @@ class Maze
         walls = new bool[width_real, height_real];
         Stack<Vector2Int> stack = new Stack<Vector2Int>();
 
-        // string str0 = "";
-        // for (int i = 0; i < height; i++) {
-        //     for (int j = 0; j < width; j++) {
-        //         str0 += vis[j, i].ToString();
-        //         str0 += ',';
-        //     }
-        //     str0 += '\n';
-        // }
-        // Debug.Log(str0);
-
         int n_vis = 1;
         stack.Push(start);
         while (n_vis < width * height) {
             Vector2Int p = stack.Peek();
-            // Debug.Log("visiting " + p.ToString());
             vis[p.x, p.y] = true;
             Vector2Int p_w = new Vector2Int(p.x * 2 + 1, p.y * 2 + 1);
             walls[p_w.x, p_w.y] = true;
 
-            // Debug.Log(p.ToString());
             int i, r = rng.Next() % 4;
             for (i = 0; i < 4; ++i) {
                 Vector2Int p_n = p + dirs[(i + r) % 4];
@@ -114,30 +156,15 @@ class Maze
                 if (!is_in(p_n) || vis[p_n.x, p_n.y])
                     continue;
 
-                // Debug.Log("pushing " + p_n.ToString());
                 vis[p_n.x, p_n.y] = true;
                 walls[p_n_w.x, p_n_w.y] = true;
-                // Debug.Log(p_n.ToString());
-                // walls[p_n.x, p_n.y] = true;
                 stack.Push(p_n);
                 ++n_vis;
                 break;
             }
             if (i == 4)
                 stack.Pop();
-            // Debug.Log(n_vis);
         }
-
-        // string str = "";
-        // for (int y = height_real - 1; y >= 0; --y) {
-        //     for (int x = 0; x < width_real; ++x) {
-        //         str += (walls[x,y]) ? 'o' : 'w';
-        //         if (x < width * 2)
-        //             str += ',';
-        //     }
-        //     str += '\n';
-        // }
-        // Debug.Log(str);
     }
 
     private bool is_in(Vector2Int p)
