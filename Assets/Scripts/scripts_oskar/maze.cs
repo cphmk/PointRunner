@@ -41,7 +41,7 @@ public class MazeGenerator : MonoBehaviour
         for (int y = 0; y < maze.height_real; ++y) {
             for (int x = 0; x < maze.width_real; ++x) {
                 if (y == maze.start.y * 2 + 1 && x == maze.start.x * 2 + 1) {
-                    player = Instantiate(player_prefab, new Vector3(x * wall_w, floor.GetComponent<Transform>().position.y + wall_h, y * wall_w),
+                    player = Instantiate(player_prefab, new Vector3(x * wall_w, floor.GetComponent<Transform>().position.y + wall_h / 2.0f, y * wall_w),
                         Quaternion.identity, transform);
                     player.GetComponent<Transform>().localScale = new Vector3(wall_w, wall_h, wall_w);
 
@@ -49,7 +49,7 @@ public class MazeGenerator : MonoBehaviour
                 if (maze.walls[x, y])
                     continue;
                 GameObject new_wall = Instantiate(wall_prefab,
-                        new Vector3(x * wall_w, floor.GetComponent<Transform>().position.y + wall_h, y * wall_w),
+                        new Vector3(x * wall_w, floor.GetComponent<Transform>().position.y + wall_h / 2.0f, y * wall_w),
                         Quaternion.identity, transform);
                 new_wall.transform.localScale = new Vector3(wall_w, wall_h, wall_w);
                 walls.Add(new_wall);
