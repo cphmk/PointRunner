@@ -105,8 +105,8 @@ class Maze
             vis[p.x, p.y] = true;
             Vector2Int p_w = new Vector2Int(p.x * 2 + 1, p.y * 2 + 1);
             walls[p_w.x, p_w.y] = true;
-            ++n_vis;
 
+            // Debug.Log(p.ToString());
             int i, r = rng.Next() % 4;
             for (i = 0; i < 4; ++i) {
                 Vector2Int p_n = p + dirs[(i + r) % 4];
@@ -117,8 +117,10 @@ class Maze
                 // Debug.Log("pushing " + p_n.ToString());
                 vis[p_n.x, p_n.y] = true;
                 walls[p_n_w.x, p_n_w.y] = true;
+                // Debug.Log(p_n.ToString());
                 // walls[p_n.x, p_n.y] = true;
                 stack.Push(p_n);
+                ++n_vis;
                 break;
             }
             if (i == 4)
@@ -126,16 +128,16 @@ class Maze
             // Debug.Log(n_vis);
         }
 
-        // string str = "";
-        // for (int y = 0; y < height * 2 + 1; ++y) {
-        //     for (int x = 0; x < width * 2 + 1; ++x) {
-        //         str += (walls[x,y]) ? 'o' : 'w';
-        //         if (x < width * 2)
-        //             str += ',';
-        //     }
-        //     str += '\n';
-        // }
-        // Debug.Log(str);
+        string str = "";
+        for (int y = height_real - 1; y >= 0; --y) {
+            for (int x = 0; x < width_real; ++x) {
+                str += (walls[x,y]) ? 'o' : 'w';
+                if (x < width * 2)
+                    str += ',';
+            }
+            str += '\n';
+        }
+        Debug.Log(str);
     }
 
     private bool is_in(Vector2Int p)
