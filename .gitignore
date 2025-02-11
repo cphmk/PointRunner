@@ -35,4 +35,9 @@ Thumbs.db
 /ProjectSettings/EditorBuildSettings.asset
 
 # Ignore Unity Asset Store files
-Assets/Desert Kits 64 Sample/
+
+
+Assets/_DesertKits64_Sample/
+Assets/_DesertKits64_Sample.meta
+Assets/ThirdPartyAssets/
+
