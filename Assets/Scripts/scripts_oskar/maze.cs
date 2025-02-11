@@ -128,16 +128,16 @@ class Maze
             // Debug.Log(n_vis);
         }
 
-        string str = "";
-        for (int y = height_real - 1; y >= 0; --y) {
-            for (int x = 0; x < width_real; ++x) {
-                str += (walls[x,y]) ? 'o' : 'w';
-                if (x < width * 2)
-                    str += ',';
-            }
-            str += '\n';
-        }
-        Debug.Log(str);
+        // string str = "";
+        // for (int y = height_real - 1; y >= 0; --y) {
+        //     for (int x = 0; x < width_real; ++x) {
+        //         str += (walls[x,y]) ? 'o' : 'w';
+        //         if (x < width * 2)
+        //             str += ',';
+        //     }
+        //     str += '\n';
+        // }
+        // Debug.Log(str);
     }
 
     private bool is_in(Vector2Int p)
