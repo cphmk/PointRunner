@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    public Camera playerCamera;
+    public Camera alternativeCamera;
      private const float gravity = -9.82f;
     [SerializeField] private float WalkSpeed = 1.5f;
     [SerializeField] private float SprintSpeed = 3.0f;
@@ -36,8 +38,24 @@ public class PlayerMovement : MonoBehaviour
 
     public bool isFalling() => m_isFalling;
 
+    private void Start()
+    {
+        playerCamera.enabled = true;
+        alternativeCamera.enabled = false;
+    }
+
     private void Update() 
     {
+        if (Input.GetKey(KeyCode.G))
+        {
+            playerCamera.enabled = false;
+            alternativeCamera.enabled = true;
+        }
+        else
+        {
+            playerCamera.enabled = true;
+            alternativeCamera.enabled = false;
+        }
         SetSprinting();
         AxesMovement();
         YOrientation();

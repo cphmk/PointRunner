@@ -3,6 +3,7 @@ using UnityEngine.UI;
 
 public class PlayerHealth : MonoBehaviour
 {
+   
     public float maxHealth = 200f;
     private float currentHealth;
 
@@ -15,6 +16,8 @@ public class PlayerHealth : MonoBehaviour
         // Setting the CurrentHealth to MaxHealth, and calling the method UpdateHealthBar
         currentHealth = maxHealth;
         UpdateHealthBar();
+        
+
     }
 
     public void TakeDamage(float damageAmount)
