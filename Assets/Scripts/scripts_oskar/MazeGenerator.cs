@@ -3,23 +3,30 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.AI;
+using Unity.AI.Navigation;
 
 public class MazeGenerator : MonoBehaviour
 {
     public GameObject floor;
     public GameObject wall_prefab;
     public GameObject player_prefab;
+    public GameObject enemy_prefab;
     public GameObject minimap_marker_prefab;
     public int maze_w, maze_h;
     public int wall_w, wall_h;
     public int minimap_cam_distance;
+    public int enemies_max;
+    public float enemies_chance;
 
     Maze maze;
     List<GameObject> walls = new List<GameObject>();
+    List<GameObject> enemies = new List<GameObject>();
     Transform floor_transf;
     GameObject player;
     GameObject minimap_cam;
     GameObject minimap_marker;
+    System.Random rng = new System.Random();
 
     Mesh mesh;
     MeshFilter mesh_filter;
@@ -27,6 +34,7 @@ public class MazeGenerator : MonoBehaviour
     List<Vector3> vertices = new List<Vector3>();
     List<int> triangles = new List<int>();
     List<Vector2> uvs = new List<Vector2>();
+    NavMeshSurface nav_mesh_surface;
 
     void Start()
     {
@@ -42,6 +50,8 @@ public class MazeGenerator : MonoBehaviour
         mesh_filter = GetComponent<MeshFilter>();
         mesh = GetComponent<MeshFilter>().mesh;
         mesh_collider = GetComponent<MeshCollider>();
+
+        nav_mesh_surface = GetComponent<NavMeshSurface>();
 
         RegenMaze();
     }
@@ -68,6 +78,7 @@ public class MazeGenerator : MonoBehaviour
         triangles.Clear();
         uvs.Clear();
 
+        int num_enemies = 0;
         maze = new Maze(maze_w, maze_h);
         maze.Gen();
 
@@ -77,6 +88,26 @@ public class MazeGenerator : MonoBehaviour
                     player = Instantiate(player_prefab, new Vector3(x * wall_w + wall_w / 2,
                                 floor_transf.position.y + (wall_h / 2.0f) * 20, y * wall_w + wall_w / 2),
                         Quaternion.identity, transform);
+                }
+
+                else if (maze.walls[x, y]) {
+                    float r = ((rng.Next() % 100) + 1) / 100.0f;
+                    if (r < enemies_chance && num_enemies++ < enemies_max) {
+                        GameObject enemy = Instantiate(enemy_prefab, new Vector3(x * wall_w + wall_w / 2,
+                                floor_transf.position.y + 10.0f, y * wall_w + wall_w / 2),
+                                Quaternion.identity);
+
+                        // NavMeshTriangulation nmt = NavMesh.Calculategcc;
+
+                        // RaycastHit hit;
+                        // if (Physics.Raycast(enemy.transform.position, Vector3.down, out hit, float.PositiveInfinity)) {
+                        //     // Debug.Log(hit.point);
+                        //     enemy.GetComponent<NavMeshAgent>().Warp(hit.point);
+                        //     enemy.GetComponent<NavMeshAgent>().enabled = true;
+                        // }
+
+                        enemies.Add(enemy);
+                    }
                 }
 
                 if (maze.walls[x, y])
@@ -121,6 +152,12 @@ public class MazeGenerator : MonoBehaviour
         mesh_for_collider.RecalculateBounds();
         mesh_for_collider.RecalculateNormals();
         mesh_collider.sharedMesh = mesh_for_collider;
+
+        nav_mesh_surface.BuildNavMesh();
+
+        Debug.Log(mesh.vertices.Length);
+        Debug.Log(mesh.triangles.Length);
+        Debug.Log("number of enemies: " + enemies.Count);
     }
 
     void AddCubeQuads(float x, float y, float z, float w, float h, int maze_x, int maze_y)
