@@ -403,7 +403,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   floor: {fileID: 735568986}
   wall_prefab: {fileID: 6222475161230261548, guid: b06a9101d018760ec9a94638d6e47fda, type: 3}
-  player_prefab: {fileID: 8034023350072734895, guid: b736166d497cf884e8c2edf00909a8af, type: 3}
+  player_prefab: {fileID: 4459864850019384750, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
   enemy_prefab: {fileID: 150324615169117089, guid: cb722e20a6e247155b9f122c88b5b839, type: 3}
   minimap_marker_prefab: {fileID: 1925879620858702800, guid: 8858929e44177422bb805b4faae81ed8, type: 3}
   maze_w: 10
