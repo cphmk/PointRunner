@@ -13,15 +13,17 @@ public class MazeGenerator : MonoBehaviour
     public GameObject player_prefab;
     public GameObject enemy_prefab;
     public GameObject minimap_marker_prefab;
-    public int maze_w, maze_h;
     public int wall_w, wall_h;
     public int minimap_cam_distance;
     public int enemies_max;
     public float enemies_chance;
 
+    GameObject game_controller;
+
     Maze maze;
     List<GameObject> walls = new List<GameObject>();
     List<GameObject> enemies = new List<GameObject>();
+    GameObject main_cam;
     GameObject floor;
     Transform floor_transf;
     GameObject player;
@@ -37,12 +39,12 @@ public class MazeGenerator : MonoBehaviour
     List<Vector2> uvs = new List<Vector2>();
     NavMeshSurface nav_mesh_surface;
 
-    void Start()
+    void Awake()
     {
-        if (maze_w > 80)
-            maze_w = 80;
-        if (maze_h > 80)
-            maze_h = 80;
+        game_controller = GameObject.Find("GameController");
+
+        main_cam = GameObject.Find("Main Camera");
+        Destroy(main_cam);
 
         floor = GameObject.Find("Floor");
         floor_transf = floor.GetComponent<Transform>();
@@ -54,22 +56,20 @@ public class MazeGenerator : MonoBehaviour
         mesh_collider = GetComponent<MeshCollider>();
 
         nav_mesh_surface = GetComponent<NavMeshSurface>();
+    }
 
-        RegenMaze();
+    void Start()
+    {
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.R)) {
-            RegenMaze();
-        }
-
         Vector3 player_pos = player.GetComponent<Transform>().position;
         minimap_cam.GetComponent<Transform>().position = new Vector3(player_pos.x, player_pos.y + minimap_cam_distance, player_pos.z);
         minimap_marker.GetComponent<Transform>().position = new Vector3(player_pos.x, player_pos.y + minimap_cam_distance - 10, player_pos.z);
     }
 
-    void RegenMaze()
+    void RegenMaze(Vector2Int dims)
     {
         Destroy(player);
         foreach (var w in walls) {
@@ -81,23 +81,26 @@ public class MazeGenerator : MonoBehaviour
         uvs.Clear();
 
         int num_enemies = 0;
-        maze = new Maze(maze_w, maze_h);
+        maze = new Maze(dims.x, dims.y);
         maze.Gen();
+
+        floor_transf.position = new Vector3((maze.width_real / 2.0f) * wall_w, 0.0f, (maze.height_real / 2.0f) * wall_w);
+        floor_transf.localScale = new Vector3(maze.width_real, 1.0f, maze.height_real);
 
         for (int y = 0; y < maze.height_real; ++y) {
             for (int x = 0; x < maze.width_real; ++x) {
                 if (y == maze.start.y * 2 + 1 && x == maze.start.x * 2 + 1) {
                     player = Instantiate(player_prefab, new Vector3(x * wall_w + wall_w / 2,
                                 floor_transf.position.y + (wall_h / 2.0f) * 10, y * wall_w + wall_w / 2),
-                        Quaternion.identity, transform);
+                            Quaternion.identity, game_controller.transform);
                 }
 
                 else if (maze.walls[x, y]) {
                     float r = ((rng.Next() % 100) + 1) / 100.0f;
                     if (r < enemies_chance && num_enemies++ < enemies_max) {
                         GameObject enemy = Instantiate(enemy_prefab, new Vector3(x * wall_w + wall_w / 2,
-                                floor_transf.position.y + 10.0f, y * wall_w + wall_w / 2),
-                                Quaternion.identity);
+                                    floor_transf.position.y + wall_h + 2, y * wall_w + wall_w / 2),
+                                Quaternion.identity, game_controller.transform);
                         enemies.Add(enemy);
                     }
                 }
@@ -108,13 +111,6 @@ public class MazeGenerator : MonoBehaviour
                 AddCubeQuads(x * wall_w, floor_transf.position.y, y * wall_w, wall_w, wall_h, x, y);
             }
         }
-
-        floor_transf.position = new Vector3((maze.width_real / 2.0f) * wall_w, 0.0f, (maze.height_real / 2.0f) * wall_w);
-        floor_transf.localScale = new Vector3(maze.width_real, 1.0f, maze.height_real);
-        // MeshFilter floor_mesh_filter = floor.GetComponent<MeshFilter>();
-        // floor_mesh_filter.sharedMesh.RecalculateBounds();
-        // floor_mesh_filter.mesh.RecalculateBounds();
-        // floor.GetComponent<NavMeshSurface>().BuildNavMesh();
 
         mesh.Clear();
 
@@ -182,7 +178,7 @@ public class MazeGenerator : MonoBehaviour
         vertices.InsertRange(0, top);
         uvs.InsertRange(0, uv);
 
-        if (maze_y >= maze_h - 1 || maze.walls[maze_x, maze_y + 1]) {
+        if (maze_y >= maze.height - 1 || maze.walls[maze_x, maze_y + 1]) {
             triangles.InsertRange(0, indices.Select(i => i + vertices.Count));
             vertices.InsertRange(0, back);
             uvs.InsertRange(0, uv);
@@ -197,7 +193,7 @@ public class MazeGenerator : MonoBehaviour
             vertices.InsertRange(0, left);
             uvs.InsertRange(0, uv);
         }
-        if (maze_x >= maze_w - 1 || maze.walls[maze_x + 1, maze_y]) {
+        if (maze_x >= maze.width - 1 || maze.walls[maze_x + 1, maze_y]) {
             triangles.InsertRange(0, indices.Select(i => i + vertices.Count));
             vertices.InsertRange(0, right);
             uvs.InsertRange(0, uv);
