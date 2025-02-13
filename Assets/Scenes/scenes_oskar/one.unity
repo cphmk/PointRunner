@@ -358,11 +358,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!1 &735568986 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7307244895109135616, guid: d3b51776c7b428cc2b3b0c5083eb65a0, type: 3}
-  m_PrefabInstance: {fileID: 4427090829305634962}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &735568996 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9184299553366303428, guid: d3b51776c7b428cc2b3b0c5083eb65a0, type: 3}
@@ -401,17 +396,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 570f2f36cea60c53e9cc72685d44775f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  floor: {fileID: 735568986}
+  floor_prefab: {fileID: 0}
   wall_prefab: {fileID: 6222475161230261548, guid: b06a9101d018760ec9a94638d6e47fda, type: 3}
   player_prefab: {fileID: 4459864850019384750, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
   enemy_prefab: {fileID: 150324615169117089, guid: cb722e20a6e247155b9f122c88b5b839, type: 3}
   minimap_marker_prefab: {fileID: 1925879620858702800, guid: 8858929e44177422bb805b4faae81ed8, type: 3}
-  maze_w: 10
-  maze_h: 10
+  maze_w: 5
+  maze_h: 5
   wall_w: 10
   wall_h: 20
   minimap_cam_distance: 500
-  enemies_max: 10
+  enemies_max: 5
   enemies_chance: 0.5
 --- !u!4 &944875161
 Transform:
@@ -1013,7 +1008,7 @@ PrefabInstance:
     - target: {fileID: 1158458209204617246, guid: d3b51776c7b428cc2b3b0c5083eb65a0, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 9f24060a37bc76f4fb1313794ad1c5e0, type: 2}
+      objectReference: {fileID: 2100000, guid: eeefa710181736c4b9737b88c2c29069, type: 2}
     - target: {fileID: 7307244895109135616, guid: d3b51776c7b428cc2b3b0c5083eb65a0, type: 3}
       propertyPath: m_Name
       value: Floor

@@ -8,7 +8,7 @@ using Unity.AI.Navigation;
 
 public class MazeGenerator : MonoBehaviour
 {
-    public GameObject floor;
+    public GameObject floor_prefab;
     public GameObject wall_prefab;
     public GameObject player_prefab;
     public GameObject enemy_prefab;
@@ -22,6 +22,7 @@ public class MazeGenerator : MonoBehaviour
     Maze maze;
     List<GameObject> walls = new List<GameObject>();
     List<GameObject> enemies = new List<GameObject>();
+    GameObject floor;
     Transform floor_transf;
     GameObject player;
     GameObject minimap_cam;
@@ -43,6 +44,7 @@ public class MazeGenerator : MonoBehaviour
         if (maze_h > 80)
             maze_h = 80;
 
+        floor = GameObject.Find("Floor");
         floor_transf = floor.GetComponent<Transform>();
         minimap_cam = GameObject.Find("MiniMapCamera");
         minimap_marker = Instantiate(minimap_marker_prefab, new Vector3(0, 0, 0), Quaternion.identity, transform);
@@ -86,7 +88,7 @@ public class MazeGenerator : MonoBehaviour
             for (int x = 0; x < maze.width_real; ++x) {
                 if (y == maze.start.y * 2 + 1 && x == maze.start.x * 2 + 1) {
                     player = Instantiate(player_prefab, new Vector3(x * wall_w + wall_w / 2,
-                                floor_transf.position.y + (wall_h / 2.0f) * 20, y * wall_w + wall_w / 2),
+                                floor_transf.position.y + (wall_h / 2.0f) * 10, y * wall_w + wall_w / 2),
                         Quaternion.identity, transform);
                 }
 
@@ -96,16 +98,6 @@ public class MazeGenerator : MonoBehaviour
                         GameObject enemy = Instantiate(enemy_prefab, new Vector3(x * wall_w + wall_w / 2,
                                 floor_transf.position.y + 10.0f, y * wall_w + wall_w / 2),
                                 Quaternion.identity);
-
-                        // NavMeshTriangulation nmt = NavMesh.Calculategcc;
-
-                        // RaycastHit hit;
-                        // if (Physics.Raycast(enemy.transform.position, Vector3.down, out hit, float.PositiveInfinity)) {
-                        //     // Debug.Log(hit.point);
-                        //     enemy.GetComponent<NavMeshAgent>().Warp(hit.point);
-                        //     enemy.GetComponent<NavMeshAgent>().enabled = true;
-                        // }
-
                         enemies.Add(enemy);
                     }
                 }
@@ -113,30 +105,16 @@ public class MazeGenerator : MonoBehaviour
                 if (maze.walls[x, y])
                     continue;
 
-                AddCubeQuads(x * wall_w, floor_transf.position.y + floor_transf.localScale.y / 2.0f , y * wall_w, wall_w, wall_h, x, y);
-
-                // GameObject new_wall = Instantiate(wall_prefab,
-                //         new Vector3(x * wall_w, floor.GetComponent<Transform>().position.y + wall_h / 2.0f, y * wall_w),
-                //         Quaternion.identity, transform);
-                // new_wall.transform.localScale = new Vector3(wall_w, wall_h, wall_w);
-
-                // foreach (var t in new_wall.GetComponent<MeshFilter>().mesh.triangles) {
-                //     triangles.Add(t + vertices.Count);
-                // }
-
-                // foreach (var v in new_wall.GetComponent<MeshFilter>().mesh.vertices) {
-                //     vertices.Add(new Vector3(v.x * wall_w + x * wall_w,
-                //                 v.y * wall_h + floor.GetComponent<Transform>().position.y + wall_h / 2.0f,
-                //                 v.z * wall_w + y * wall_w));
-                // }
-
-                // foreach (var uv in new_wall.GetComponent<MeshFilter>().mesh.uv) {
-                //     uvs.Add(uv);
-                // }
-
-                // Destroy(new_wall);
+                AddCubeQuads(x * wall_w, floor_transf.position.y, y * wall_w, wall_w, wall_h, x, y);
             }
         }
+
+        floor_transf.position = new Vector3((maze.width_real / 2.0f) * wall_w, 0.0f, (maze.height_real / 2.0f) * wall_w);
+        floor_transf.localScale = new Vector3(maze.width_real, 1.0f, maze.height_real);
+        // MeshFilter floor_mesh_filter = floor.GetComponent<MeshFilter>();
+        // floor_mesh_filter.sharedMesh.RecalculateBounds();
+        // floor_mesh_filter.mesh.RecalculateBounds();
+        // floor.GetComponent<NavMeshSurface>().BuildNavMesh();
 
         mesh.Clear();
 
@@ -245,6 +223,8 @@ class Maze
         System.Random rng = new System.Random();
         start = new Vector2Int(rng.Next() % width, rng.Next() % height);
 
+        Debug.Log("start: " + start.ToString() + " in cell: " + (new Vector2Int(start.x * 2 + 1, start.y * 2 + 1)).ToString());
+
         bool[,] vis = new bool[width, height];
         walls = new bool[width_real, height_real];
         Stack<Vector2Int> stack = new Stack<Vector2Int>();
@@ -260,12 +240,14 @@ class Maze
             int i, r = rng.Next() % 4;
             for (i = 0; i < 4; ++i) {
                 Vector2Int p_n = p + dirs[(i + r) % 4];
+                Vector2Int p_n_c = new Vector2Int(p.x * 2 + 1, p.y * 2 + 1) + dirs[(i + r) % 4] * 2;
                 Vector2Int p_n_w = new Vector2Int(p.x * 2 + 1, p.y * 2 + 1) + dirs[(i + r) % 4];
                 if (!is_in(p_n) || vis[p_n.x, p_n.y])
                     continue;
 
                 vis[p_n.x, p_n.y] = true;
                 walls[p_n_w.x, p_n_w.y] = true;
+                walls[p_n_c.x, p_n_c.y] = true;
                 stack.Push(p_n);
                 ++n_vis;
                 break;
