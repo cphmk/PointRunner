@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2154820574740046192}
   - component: {fileID: 6375940692583529087}
   - component: {fileID: -2370086696287206695}
-  - component: {fileID: -4421951682489548260}
+  - component: {fileID: 7047906749846791524}
   m_Layer: 0
   m_Name: EnemyCapsule
   m_TagString: Untagged
@@ -68,7 +68,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: fec8107908dd1694f99b94ef3c1c16fe, type: 2}
+  - {fileID: 2100000, guid: ce7a5b9e26ff3e212828f5c2c1bba0cb, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -162,7 +162,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &-4421951682489548260
+--- !u!114 &7047906749846791524
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -179,6 +179,7 @@ MonoBehaviour:
   landed: 0
   shoot_cooldown: 0.5
   shoot_cooldown_left: 0
+  hp: 3
   damage: 1
   collision_damage: 1
   projectile_speed: 1000

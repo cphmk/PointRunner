@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class EnemyCapsule : MonoBehaviour
+public class EnemyCapsuleScript : MonoBehaviour
 {
     public GameObject projectile_prefab;
 
@@ -13,20 +13,22 @@ public class EnemyCapsule : MonoBehaviour
     NavMeshPath path_to_player;
     Rigidbody rb;
     Material material;
+    Color color_orig;
 
     /* game logic*/
     public float aggro_range = 15.0f;
     public bool landed = false;
     public float shoot_cooldown = 0.5f;
     public float shoot_cooldown_left = 0;
-    public int hp = 3;
+    public int hp = 1;
     public int damage = 1;
     public int collision_damage = 1;
     public int projectile_speed = 1000;
     public float projectile_scale = 0.1f;
     public float projectile_duration = 1;
     /* animation */
-    float death_anim_secs = 2;
+    float death_anim_total = 0.5f;
+    float death_anim_secs = 0;
     float damage_anim_remaining_secs = 0;
 
     void Awake()
@@ -37,6 +39,7 @@ public class EnemyCapsule : MonoBehaviour
         nma = GetComponent<NavMeshAgent>();
         nma.enabled = false;
         material = GetComponent<Renderer>().material;
+        color_orig = material.color;
     }
 
     void Start()
@@ -83,10 +86,21 @@ public class EnemyCapsule : MonoBehaviour
             }
         }
 
+        Color color_temp = color_orig;
+
         if (death_anim_secs > 0) {
             death_anim_secs -= Time.deltaTime;
-            material.color = new Color(material.color.r, material.color.g, material.color.b, material.color.a - ((2 - death_anim_secs) / 2));
+            color_temp.r = color_temp.r - (death_anim_total - death_anim_secs);
+            color_temp.g = color_temp.g - (death_anim_total - death_anim_secs);
+            color_temp.b = color_temp.b - (death_anim_total - death_anim_secs);
         }
+
+        else if (damage_anim_remaining_secs > 0) {
+            damage_anim_remaining_secs -= Time.deltaTime;
+            color_temp.r = (float)Math.Abs(Math.Sin(Time.time * 10));
+        }
+
+        material.color = color_temp;
     }
 
     void OnCollisionEnter(Collision collision_data)
@@ -97,10 +111,10 @@ public class EnemyCapsule : MonoBehaviour
         }
 
         foreach (ContactPoint c_point in collision_data) {
-            game_controller.SendMessage("OnEnemyCollision", collision_damage, SendMessageOptions.DontRequireReceiver);
-            // rb.AddForceAtPosition(c_point.normal * 1000, c_point.point);
+            c_point.otherCollider.gameObject.SendMessage("OnEnemyCollision", damage, SendMessageOptions.DontRequireReceiver);
+            // rb.AddForceAtPosition(c_point.normal * 100, c_point.point);
         }
-        rb.linearVelocity = new Vector3(0, 0, 0);
+        // rb.linearVelocity = new Vector3(0, 0, 0);
     }
 
     float DistToPlayer()
@@ -113,14 +127,11 @@ public class EnemyCapsule : MonoBehaviour
 
     void OnProjectileHit(int damage)
     {
-        Debug.Log("EnemyCapsule OnProjectileHit: " + damage);
+        // Debug.Log("EnemyCapsule OnProjectileHit: " + damage);
         hp -= damage;
-        if (hp < 1) {
+        if (hp < 1)
             KillThis();
-        }
-        else {
-            DamageThis(damage);
-        }
+        DamageThis(damage);
     }
 
     void DamageThis(int d)
@@ -130,7 +141,7 @@ public class EnemyCapsule : MonoBehaviour
 
     void KillThis()
     {
-        death_anim_secs = 2;
-        Destroy(gameObject, 2);
+        death_anim_secs = death_anim_total;
+        Destroy(gameObject, death_anim_total);
     }
 }

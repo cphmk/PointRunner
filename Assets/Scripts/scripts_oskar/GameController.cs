@@ -156,19 +156,24 @@ public class GameController : MonoBehaviour
         game_player_props = go_player.GetComponent<PlayerScript>();
         player_cam = go_player.GetComponent<Camera>();
 
-        game_num_enemies = 10 + 5 * game_level;
+        game_num_enemies = 20 + 5 * game_level;
         for (int i = 0; i < game_num_enemies; i++) {
             int x = game_rng.Next() % maze.width_world;
             int y = game_rng.Next() % maze.height_world;
 
-            while (!maze.walls[x, y] || (x == maze.start_world.x && y == maze.start_world.y) || (x == maze.finish_world.x && y == maze.finish_world.y)) {
+            while (!maze.walls[x, y] || (x == maze.start_world.x && y == maze.start_world.y)
+                    || (x == maze.finish_world.x && y == maze.finish_world.y)) {
                 x = game_rng.Next() % maze.width_world;
                 y = game_rng.Next() % maze.height_world;
             }
 
-            GameObject enemy = Instantiate(enemy_capsule_prefab, new Vector3(x * maze_wall_width + maze_wall_width / 2,
-                        floor_transform.position.y + maze_wall_height + 2, y * maze_wall_width + maze_wall_width / 2),
+            float offs = 0.1f * ((game_rng.Next() % 6)) + 0.25f;
+
+            GameObject enemy = Instantiate(enemy_capsule_prefab, new Vector3(x * maze_wall_width + maze_wall_width * offs,
+                        floor_transform.position.y + floor_transform.localScale.y + maze_height * offs + 2, y * maze_wall_width + maze_wall_width * offs),
                     Quaternion.identity, transform);
+            EnemyCapsuleScript enemy_props = enemy.GetComponent<EnemyCapsuleScript>();
+            enemy_props.hp = 1 + game_level;
             go_enemies.Add(enemy);
         }
     }

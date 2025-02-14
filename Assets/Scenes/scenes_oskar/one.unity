@@ -1043,7 +1043,7 @@ MonoBehaviour:
   maze_height: 5
   maze_wall_width: 10
   maze_wall_height: 20
-  minimap_cam_distance: 50
+  minimap_cam_distance: 100
 --- !u!4 &1761507206
 Transform:
   m_ObjectHideFlags: 0
