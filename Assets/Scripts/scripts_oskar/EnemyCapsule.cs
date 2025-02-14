@@ -13,21 +13,26 @@ public class EnemyCapsule : MonoBehaviour
     NavMeshPath path_to_player;
 
     /* game logic*/
-    float aggro_range = 15.0f;
-    bool landed = false;
-    float shoot_cooldown = 0.5f;
-    float shoot_cooldown_left = 0;
+    public float aggro_range = 15.0f;
+    public bool landed = false;
+    public float shoot_cooldown = 0.5f;
+    public float shoot_cooldown_left = 0;
+    public int damage = 1;
+    public int collision_damage = 1;
+    public int projectile_speed = 1000;
+    public float projectile_scale = 0.1f;
+    public float projectile_duration = 1;
 
     void Awake()
     {
         game_controller = transform.parent.gameObject;
         path_to_player = new NavMeshPath();
+        nma = GetComponent<NavMeshAgent>();
+        nma.enabled = false;
     }
 
     void Start()
     {
-        nma = GetComponent<NavMeshAgent>();
-        nma.enabled = false;
     }
 
     void Update()
@@ -51,8 +56,13 @@ public class EnemyCapsule : MonoBehaviour
                 if (shoot_cooldown_left == 0) {
                     GameObject proj = Instantiate(projectile_prefab, transform.position + diff_vec_norm,
                             Quaternion.FromToRotation(Vector3.forward, diff_vec_norm), game_controller.transform);
-                    proj.GetComponent<Rigidbody>().AddForce(diff_vec_norm * 1000);
-                    Destroy(proj, 1);
+                    ProjectileScript props = proj.GetComponent<ProjectileScript>();
+
+                    props.damage = damage;
+                    props.speed = projectile_speed;
+                    props.duration = projectile_duration;
+                    props.scale = projectile_scale;
+
                     shoot_cooldown_left = shoot_cooldown;
                 }
                 else {
@@ -74,9 +84,7 @@ public class EnemyCapsule : MonoBehaviour
         }
 
         foreach (ContactPoint c_point in collision_data) {
-            if (!c_point.otherCollider.gameObject.CompareTag("Player"))
-                continue;
-            game_controller.SendMessage("EnemyPlayerCollision", transform);
+            game_controller.SendMessage("OnEnemyCollision", collision_damage, SendMessageOptions.DontRequireReceiver);
         }
     }
 
@@ -86,5 +94,10 @@ public class EnemyCapsule : MonoBehaviour
         for (int i = 1; i < path_to_player.corners.Length; ++i)
             d += Vector3.Distance(path_to_player.corners[i - 1], path_to_player.corners[i]);
         return d;
+    }
+
+    void OnProjectileHit(int damage)
+    {
+        Debug.Log("OnProjectileHit: " + damage);
     }
 }

@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 5813319645755355757}
   - component: {fileID: 2154820574740046192}
   - component: {fileID: 6375940692583529087}
-  - component: {fileID: 7267921473688549602}
   - component: {fileID: -2370086696287206695}
+  - component: {fileID: -4421951682489548260}
   m_Layer: 0
   m_Name: EnemyCapsule
   m_TagString: Untagged
@@ -135,19 +135,6 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &7267921473688549602
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 150324615169117089}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 67e540586688a47e6b1ec87d1c67d0f8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  projectile_prefab: {fileID: 2135256427063129366, guid: 836fc225343e5a54aa58c4c6e9a44a31, type: 3}
 --- !u!54 &-2370086696287206695
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -175,3 +162,25 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &-4421951682489548260
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 150324615169117089}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67e540586688a47e6b1ec87d1c67d0f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  projectile_prefab: {fileID: 7092642468565383246, guid: 1fb43e4f503ca7ae792aeff4b743c301, type: 3}
+  aggro_range: 15
+  landed: 0
+  shoot_cooldown: 0.5
+  shoot_cooldown_left: 0
+  damage: 1
+  collision_damage: 1
+  projectile_speed: 1000
+  projectile_scale: 0.1
+  projectile_duration: 1
