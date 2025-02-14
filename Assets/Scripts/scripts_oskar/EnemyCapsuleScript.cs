@@ -11,24 +11,32 @@ public class EnemyCapsule : MonoBehaviour
     Transform player_transf;
     NavMeshAgent nma;
     NavMeshPath path_to_player;
+    Rigidbody rb;
+    Material material;
 
     /* game logic*/
     public float aggro_range = 15.0f;
     public bool landed = false;
     public float shoot_cooldown = 0.5f;
     public float shoot_cooldown_left = 0;
+    public int hp = 3;
     public int damage = 1;
     public int collision_damage = 1;
     public int projectile_speed = 1000;
     public float projectile_scale = 0.1f;
     public float projectile_duration = 1;
+    /* animation */
+    float death_anim_secs = 2;
+    float damage_anim_remaining_secs = 0;
 
     void Awake()
     {
         game_controller = transform.parent.gameObject;
         path_to_player = new NavMeshPath();
+        rb = GetComponent<Rigidbody>();
         nma = GetComponent<NavMeshAgent>();
         nma.enabled = false;
+        material = GetComponent<Renderer>().material;
     }
 
     void Start()
@@ -74,6 +82,11 @@ public class EnemyCapsule : MonoBehaviour
                 nma.ResetPath();
             }
         }
+
+        if (death_anim_secs > 0) {
+            death_anim_secs -= Time.deltaTime;
+            material.color = new Color(material.color.r, material.color.g, material.color.b, material.color.a - ((2 - death_anim_secs) / 2));
+        }
     }
 
     void OnCollisionEnter(Collision collision_data)
@@ -85,7 +98,9 @@ public class EnemyCapsule : MonoBehaviour
 
         foreach (ContactPoint c_point in collision_data) {
             game_controller.SendMessage("OnEnemyCollision", collision_damage, SendMessageOptions.DontRequireReceiver);
+            // rb.AddForceAtPosition(c_point.normal * 1000, c_point.point);
         }
+        rb.linearVelocity = new Vector3(0, 0, 0);
     }
 
     float DistToPlayer()
@@ -98,6 +113,24 @@ public class EnemyCapsule : MonoBehaviour
 
     void OnProjectileHit(int damage)
     {
-        Debug.Log("OnProjectileHit: " + damage);
+        Debug.Log("EnemyCapsule OnProjectileHit: " + damage);
+        hp -= damage;
+        if (hp < 1) {
+            KillThis();
+        }
+        else {
+            DamageThis(damage);
+        }
+    }
+
+    void DamageThis(int d)
+    {
+        damage_anim_remaining_secs = 0.25f * (float)Math.Sqrt(d);
+    }
+
+    void KillThis()
+    {
+        death_anim_secs = 2;
+        Destroy(gameObject, 2);
     }
 }

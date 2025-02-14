@@ -26,8 +26,8 @@ public class ProjectileScript : MonoBehaviour
     void OnCollisionEnter(Collision collision_data)
     {
         foreach (ContactPoint c_point in collision_data) {
-            if (!c_point.otherCollider.gameObject.CompareTag("Player"))
-                continue;
+            // if (!c_point.otherCollider.gameObject.CompareTag("Player"))
+            //     continue;
             c_point.otherCollider.gameObject.SendMessage("OnProjectileHit", damage, SendMessageOptions.DontRequireReceiver);
         }
     }

@@ -6,6 +6,7 @@ public class PlayerScript : MonoBehaviour
     public GameObject projectile_prefab;
 
     GameObject game_controller;
+    Camera cam;
 
     public float shoot_cooldown = 0.5f;
     float shoot_cooldown_left = 0;
@@ -19,28 +20,34 @@ public class PlayerScript : MonoBehaviour
 
     void Awake()
     {
-        game_controller = transform.parent.gameObject;
     }
 
     void Start()
     {
-
+        cam = GetComponent<FirstPersonController>().playerCamera;
+        game_controller = transform.parent.gameObject;
     }
 
     void Update()
     {
         if (Input.GetMouseButton(0)) {
             if (shoot_cooldown_left == 0) {
-                    GameObject proj = Instantiate(projectile_prefab, transform.position + transform.forward,
-                            Quaternion.FromToRotation(Vector3.forward, transform.forward), game_controller.transform);
-                    ProjectileScript props = proj.GetComponent<ProjectileScript>();
+                Ray aim_ray = cam.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
+                Vector3 aim_pos = new Vector3(transform.position.x + aim_ray.direction.x,
+                        transform.position.y + aim_ray.direction.y + transform.localScale.y / 4,
+                        transform.position.z + aim_ray.direction.z);
 
-                    props.damage = damage;
-                    props.speed = projectile_speed;
-                    props.duration = projectile_duration;
-                    props.scale = projectile_scale;
+                GameObject proj = Instantiate(projectile_prefab, aim_pos,
+                        Quaternion.FromToRotation(Vector3.forward, aim_ray.direction),
+                        game_controller.transform);
+                ProjectileScript props = proj.GetComponent<ProjectileScript>();
 
-                    shoot_cooldown_left = shoot_cooldown;
+                props.damage = damage;
+                props.speed = projectile_speed;
+                props.duration = projectile_duration;
+                props.scale = projectile_scale;
+
+                shoot_cooldown_left = shoot_cooldown;
             }
         }
         shoot_cooldown_left -= Time.deltaTime;

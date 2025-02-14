@@ -25,6 +25,9 @@ public class GameController : MonoBehaviour
     GameObject go_minimap_marker;
     List<GameObject> go_enemies;
 
+    Camera main_cam;
+    Camera player_cam;
+
     Transform floor_transform;
 
     public int maze_width;
@@ -54,6 +57,7 @@ public class GameController : MonoBehaviour
     void Start()
     {
         go_main_cam = GameObject.Find("Main Camera");
+        main_cam = go_main_cam.GetComponent<Camera>();
         go_maze = GameObject.Find("Maze");
         go_floor = GameObject.Find("Floor");
         go_minimap_cam = GameObject.Find("MiniMapCamera");
@@ -150,13 +154,18 @@ public class GameController : MonoBehaviour
                     maze.start_world.y * maze_wall_width + maze_wall_width / 2),
                 Quaternion.identity, transform);
         game_player_props = go_player.GetComponent<PlayerScript>();
+        player_cam = go_player.GetComponent<Camera>();
 
         game_num_enemies = 10 + 5 * game_level;
         for (int i = 0; i < game_num_enemies; i++) {
-            int x = game_rng.Next() % maze.width;
-            int y = game_rng.Next() % maze.height;
-            x = x * 2 + 1;
-            y = y * 2 + 1;
+            int x = game_rng.Next() % maze.width_world;
+            int y = game_rng.Next() % maze.height_world;
+
+            while (!maze.walls[x, y] || (x == maze.start_world.x && y == maze.start_world.y) || (x == maze.finish_world.x && y == maze.finish_world.y)) {
+                x = game_rng.Next() % maze.width_world;
+                y = game_rng.Next() % maze.height_world;
+            }
+
             GameObject enemy = Instantiate(enemy_capsule_prefab, new Vector3(x * maze_wall_width + maze_wall_width / 2,
                         floor_transform.position.y + maze_wall_height + 2, y * maze_wall_width + maze_wall_width / 2),
                     Quaternion.identity, transform);
@@ -167,6 +176,8 @@ public class GameController : MonoBehaviour
     void StopGame()
     {
         Destroy(go_player);
+        foreach (var e in go_enemies)
+            Destroy(e);
         go_main_cam.SetActive(true);
     }
 
@@ -272,6 +283,7 @@ class Maze
     public Vector2Int start, finish;
     public Vector2Int start_world, finish_world;
     public bool[,] walls;
+    public List<Vector2Int> free_tiles;
 
     public static readonly Vector2Int[] dirs = {new Vector2Int( 0, 1), new Vector2Int( 1, 0), new Vector2Int( 0, -1), new Vector2Int( -1, 0)};
 
