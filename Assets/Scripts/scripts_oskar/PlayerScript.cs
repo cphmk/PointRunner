@@ -77,7 +77,8 @@ public class PlayerScript : MonoBehaviour
         projectile_speed += reward.projectile_speed;
         projectile_scale += reward.projectile_scale;
         projectile_duration += reward.projectile_duration;
-        shoot_cooldown -= reward.shoot_cooldown;
+        if (reward.shoot_cooldown != 0)
+            shoot_cooldown -= shoot_cooldown / 10.0f;
 
         string reward_str = "";
         if (reward.hp > 0)
@@ -93,7 +94,7 @@ public class PlayerScript : MonoBehaviour
         if (reward.projectile_duration > 0)
             reward_str = "+" + reward.projectile_duration.ToString() + "PROJ DURATION";
         if (reward.shoot_cooldown > 0)
-            reward_str = "-" + reward.shoot_cooldown.ToString() + "RELOAD TIME";
+            reward_str = "-" + (shoot_cooldown / 20.0f).ToString() + "RELOAD TIME";
 
         Debug.Log(reward_str);
     }

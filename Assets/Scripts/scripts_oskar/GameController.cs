@@ -388,7 +388,7 @@ public class GameController : MonoBehaviour
 
     string GetPlayerStatsText()
     {
-        return string.Format("HP: {0}/{1} DMG: {2} RELOAD SPEED: {3} PROJ SPEED/DUR/SCALE: {4}/{5}/{6}",
+        return string.Format("HP: {0}/{1} DMG: {2} RELOAD SPEED: {3:F1} PROJ SPEED/DUR/SCALE: {4:F1}/{5:F1}/{6:F1}",
                 game_player_props.hp, game_player_props.hp_max,
                 game_player_props.damage, game_player_props.shoot_cooldown,
                 game_player_props.projectile_speed, game_player_props.projectile_duration, game_player_props.projectile_scale);
