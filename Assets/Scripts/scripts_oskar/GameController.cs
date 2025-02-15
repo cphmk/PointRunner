@@ -43,7 +43,9 @@ public class GameController : MonoBehaviour
     System.Random game_rng = new System.Random();
 
     bool is_playing = false;
+    bool is_paused = false;
     int game_level = 1;
+    int game_points = 0;
     int game_num_enemies = 10;
     PlayerScript game_player_props;
     /* UI */
@@ -52,12 +54,16 @@ public class GameController : MonoBehaviour
     GameObject UI;
     GameObject UI_overlay;
     Image UI_overlay_image;
-    TextMeshProUGUI text_player_stats;
+    TextMeshProUGUI UI_game_stats_text;
+    TextMeshProUGUI UI_player_stats_text;
     GameObject go_UI_player_stats;
+    GameObject go_UI_game_stats;
     GameObject go_UI_minimap;
     GameObject go_UI_play_button;
+    GameObject go_UI_resume_button;
     GameObject go_UI_title;
     Button UI_play_button;
+    Button UI_resume_button;
     TextMeshProUGUI UI_title;
 
     float damage_blink_total_secs;
@@ -80,14 +86,21 @@ public class GameController : MonoBehaviour
         UI_overlay_image = UI_overlay.GetComponent<Image>();
         go_UI_play_button = GameObject.Find("PlayButton");
         UI_play_button = go_UI_play_button.GetComponent<Button>();
+        go_UI_resume_button = GameObject.Find("ResumeButton");
+        UI_resume_button = go_UI_resume_button.GetComponent<Button>();
         go_UI_minimap = GameObject.Find("MiniMap");
         go_UI_title = GameObject.Find("TitleText");
-        go_UI_player_stats = GameObject.Find("TextStats");
         UI_title = go_UI_title.GetComponent<TextMeshProUGUI>();
 
-        text_player_stats = GameObject.Find("TextStats").GetComponent<TextMeshProUGUI>();
+        go_UI_player_stats = GameObject.Find("PlayerStatsText");
+        go_UI_game_stats = GameObject.Find("GameStatsText");
+        UI_player_stats_text = go_UI_player_stats.GetComponent<TextMeshProUGUI>();
+        UI_game_stats_text = go_UI_game_stats.GetComponent<TextMeshProUGUI>();
 
-        UI_play_button.onClick.AddListener(() => { NewMaze(); StartGame();});
+        UI_play_button.onClick.AddListener(() => { StopGame(); NewMaze(); StartGame();});
+        UI_resume_button.onClick.AddListener(() => { ResumeGame();});
+
+        go_UI_resume_button.SetActive(false);
 
         NewMaze();
         StopGame();
@@ -98,11 +111,12 @@ public class GameController : MonoBehaviour
         if (is_playing) {
             Vector3 player_pos = go_player.GetComponent<Transform>().position;
 
-            if (game_player_props != null)
-                text_player_stats.text = GetPlayerStatsText();
-            // text_player_stats.text = string.Format("HP: {0}/{1}", game_player_props.hp, game_player_props.hp_max);
+            if (game_player_props != null) {
+                UI_player_stats_text.text = GetPlayerStatsText();
+                UI_game_stats_text.text = GetGameStatsText();
+            }
             else
-                text_player_stats.text = "";
+                UI_player_stats_text.text = "";
 
             if (damage_blink_remaining_secs > 0) {
                 damage_blink_remaining_secs -= Time.deltaTime;
@@ -120,7 +134,7 @@ public class GameController : MonoBehaviour
             go_minimap_marker.GetComponent<Transform>().position = new Vector3(player_pos.x, player_pos.y + minimap_cam_distance - 10, player_pos.z);
         }
 
-        else {
+        else if (!is_paused) {
             UI_refresh_time_cooldown -= Time.deltaTime;
             if (UI_refresh_time_cooldown <= 0) {
                 UI_refresh_time_cooldown = UI_refresh_time;
@@ -131,14 +145,13 @@ public class GameController : MonoBehaviour
         }
 
         if (Input.GetKeyDown(KeyCode.R)) {
-            StopGame();
-            NewMaze();
-            StartGame();
+            // StopGame();
+            // NewMaze();
+            // StartGame();
         }
 
         if (Input.GetKeyDown(KeyCode.Escape)) {
-            StopGame();
-            NewMaze();
+            PauseGame();
         }
 
     }
@@ -189,6 +202,7 @@ public class GameController : MonoBehaviour
         go_UI_title.SetActive(false);
         go_UI_minimap.SetActive(true);
         go_UI_player_stats.SetActive(true);
+        go_UI_game_stats.SetActive(true);
         go_minimap_marker.SetActive(true);
 
         go_player = Instantiate(player_prefab, new Vector3(maze.start_world.x * maze_wall_width + maze_wall_width / 2,
@@ -227,6 +241,38 @@ public class GameController : MonoBehaviour
         is_playing = true;
     }
 
+    void PauseGame()
+    {
+        Debug.Log("PauseGame");
+        is_playing = false;
+        is_paused = true;
+        go_player.SetActive(false);
+        go_main_cam.SetActive(true);
+        go_UI_minimap.SetActive(false);
+        go_UI_play_button.SetActive(true);
+        go_UI_title.SetActive(true);
+        // go_UI_player_stats.SetActive(false);
+        go_minimap_marker.SetActive(false);
+        go_UI_resume_button.SetActive(true);
+        Cursor.lockState = CursorLockMode.None;
+    }
+
+    void ResumeGame()
+    {
+        Debug.Log("ResumeGame");
+        is_playing = true;
+        is_paused = false;
+        go_player.SetActive(true);
+        go_main_cam.SetActive(false);
+        go_UI_minimap.SetActive(true);
+        go_UI_play_button.SetActive(false);
+        go_UI_title.SetActive(false);
+        // go_UI_player_stats.SetActive(true);
+        go_minimap_marker.SetActive(true);
+        go_UI_resume_button.SetActive(false);
+        Cursor.lockState = CursorLockMode.Locked;
+    }
+
     void StopGame()
     {
         is_playing = false;
@@ -236,8 +282,10 @@ public class GameController : MonoBehaviour
         go_main_cam.SetActive(true);
         go_UI_minimap.SetActive(false);
         go_UI_play_button.SetActive(true);
+        go_UI_resume_button.SetActive(false);
         go_UI_title.SetActive(true);
         go_UI_player_stats.SetActive(false);
+        go_UI_game_stats.SetActive(false);
         go_minimap_marker.SetActive(false);
         Cursor.lockState = CursorLockMode.None;
     }
@@ -255,6 +303,11 @@ public class GameController : MonoBehaviour
                 game_player_props.projectile_speed, game_player_props.projectile_duration, game_player_props.projectile_scale);
     }
 
+    string GetGameStatsText()
+    {
+        return string.Format("LEVEL: {0} SCORE: {1}", game_level, game_points);
+    }
+
     void UpdateMenuCam()
     {
         float camera_dist = 100;
@@ -268,7 +321,7 @@ public class GameController : MonoBehaviour
     }
 }
 
-class MazeMeshGenerator : MonoBehaviour
+class MazeMeshGenerator
 {
     public List<Vector3> vertices = new List<Vector3>();
     public List<int> triangles = new List<int>();

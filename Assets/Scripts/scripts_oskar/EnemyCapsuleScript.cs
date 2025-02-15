@@ -55,34 +55,39 @@ public class EnemyCapsuleScript : MonoBehaviour
         if (player == null || player_transf == null)
             return;
 
-        if (landed) {
-            nma.CalculatePath(player_transf.position, path_to_player);
+        if (landed && player.activeInHierarchy) {
+            try {
+                nma.CalculatePath(player_transf.position, path_to_player);
 
-            float d = DistToPlayer();
-            if (d <= aggro_range && d > 0.001f) {
-                nma.SetDestination(player_transf.position);
-                Vector3 diff_vec = player_transf.position - transform.position;
-                Vector3 diff_vec_norm = Vector3.Normalize(diff_vec);
+                float d = DistToPlayer();
+                if (d <= aggro_range && d > 0.001f) {
+                    nma.SetDestination(player_transf.position);
+                    Vector3 diff_vec = player_transf.position - transform.position;
+                    Vector3 diff_vec_norm = Vector3.Normalize(diff_vec);
 
-                if (shoot_cooldown_left == 0) {
-                    GameObject proj = Instantiate(projectile_prefab, transform.position + diff_vec_norm,
-                            Quaternion.FromToRotation(Vector3.forward, diff_vec_norm), game_controller.transform);
-                    ProjectileScript props = proj.GetComponent<ProjectileScript>();
+                    if (shoot_cooldown_left == 0) {
+                        GameObject proj = Instantiate(projectile_prefab, transform.position + diff_vec_norm,
+                                Quaternion.FromToRotation(Vector3.forward, diff_vec_norm), game_controller.transform);
+                        ProjectileScript props = proj.GetComponent<ProjectileScript>();
 
-                    props.damage = damage;
-                    props.speed = projectile_speed;
-                    props.duration = projectile_duration;
-                    props.scale = projectile_scale;
+                        props.damage = damage;
+                        props.speed = projectile_speed;
+                        props.duration = projectile_duration;
+                        props.scale = projectile_scale;
 
-                    shoot_cooldown_left = shoot_cooldown;
+                        shoot_cooldown_left = shoot_cooldown;
+                    }
+                    else {
+                        shoot_cooldown_left -= Time.deltaTime;
+                        shoot_cooldown_left = Math.Max(0, shoot_cooldown_left);
+                    }
                 }
                 else {
-                    shoot_cooldown_left -= Time.deltaTime;
-                    shoot_cooldown_left = Math.Max(0, shoot_cooldown_left);
+                    nma.ResetPath();
                 }
             }
-            else {
-                nma.ResetPath();
+            catch (Exception e) {
+
             }
         }
 
@@ -105,12 +110,11 @@ public class EnemyCapsuleScript : MonoBehaviour
 
     void OnCollisionEnter(Collision collision_data)
     {
-        if (!landed) {
-            nma.enabled = true;
-            landed = true;
-        }
-
         foreach (ContactPoint c_point in collision_data) {
+            if (!landed && collision_data.gameObject.name == "Floor") {
+                nma.enabled = true;
+                landed = true;
+            }
             c_point.otherCollider.gameObject.SendMessage("OnEnemyCollision", damage, SendMessageOptions.DontRequireReceiver);
             // rb.AddForceAtPosition(c_point.normal * 100, c_point.point);
         }
