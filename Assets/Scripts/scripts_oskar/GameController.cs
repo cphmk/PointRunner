@@ -24,7 +24,6 @@ public class GameController : MonoBehaviour
     GameObject go_minimap_cam;
     GameObject go_minimap_marker;
     List<GameObject> go_enemies;
-    /* UI */
 
     Camera main_cam;
     Camera player_cam;
@@ -48,6 +47,8 @@ public class GameController : MonoBehaviour
     int game_num_enemies = 10;
     PlayerScript game_player_props;
     /* UI */
+    float UI_refresh_time = 4;
+    float UI_refresh_time_cooldown = 0;
     GameObject UI;
     GameObject UI_overlay;
     Image UI_overlay_image;
@@ -119,6 +120,16 @@ public class GameController : MonoBehaviour
             go_minimap_marker.GetComponent<Transform>().position = new Vector3(player_pos.x, player_pos.y + minimap_cam_distance - 10, player_pos.z);
         }
 
+        else {
+            UI_refresh_time_cooldown -= Time.deltaTime;
+            if (UI_refresh_time_cooldown <= 0) {
+                UI_refresh_time_cooldown = UI_refresh_time;
+                NewMaze();
+            }
+
+            UpdateMenuCam();
+        }
+
         if (Input.GetKeyDown(KeyCode.R)) {
             StopGame();
             NewMaze();
@@ -134,15 +145,14 @@ public class GameController : MonoBehaviour
 
     void NewMaze()
     {
-        maze = new Maze(maze_width + game_level, maze_height + game_level);
+        maze_width = 5 + 2 * game_level + (game_rng.Next() % 5);
+        maze_height = 5 + 2 * game_level + (game_rng.Next() % 5);
+        maze = new Maze(maze_width, maze_height);
         maze_mesh_generator = new MazeMeshGenerator();
         maze.Gen();
 
         floor_transform.position = new Vector3((maze.width_world / 2.0f) * maze_wall_width, 0.0f, (maze.height_world / 2.0f) * maze_wall_width);
         floor_transform.localScale = new Vector3(maze.width_world, 1.0f, maze.height_world);
-
-        main_cam.transform.SetPositionAndRotation(new Vector3(floor_transform.position.x - 100, 200, floor_transform.position.z - 100),
-                Quaternion.Euler(60, 45, 0));
 
         maze_mesh_generator.GenMesh(maze, floor_transform.position.y, maze_wall_width, maze_wall_height);
 
@@ -188,7 +198,7 @@ public class GameController : MonoBehaviour
         game_player_props = go_player.GetComponent<PlayerScript>();
         player_cam = go_player.GetComponent<Camera>();
 
-        game_num_enemies = 20 + 5 * game_level;
+        game_num_enemies = 2 * (maze.width + game_level) + 2 * (maze.height + game_level);
         for (int i = 0; i < game_num_enemies; i++) {
             int x = game_rng.Next() % maze.width_world;
             int y = game_rng.Next() % maze.height_world;
@@ -206,6 +216,11 @@ public class GameController : MonoBehaviour
                     Quaternion.identity, transform);
             EnemyCapsuleScript enemy_props = enemy.GetComponent<EnemyCapsuleScript>();
             enemy_props.hp = 1 + game_level;
+            enemy_props.damage = 1 + game_level;
+            enemy_props.aggro_range = 15 + 2 * game_level;
+            enemy_props.shoot_cooldown = Math.Max(0.5f - (0.02f * game_level), 0.1f);
+            enemy_props.collision_damage = 1 + game_level;
+            enemy_props.projectile_speed = 1000 + 50 * game_level;
             go_enemies.Add(enemy);
         }
 
@@ -224,6 +239,7 @@ public class GameController : MonoBehaviour
         go_UI_title.SetActive(true);
         go_UI_player_stats.SetActive(false);
         go_minimap_marker.SetActive(false);
+        Cursor.lockState = CursorLockMode.None;
     }
 
     void DamagePlayer(int d)
@@ -237,6 +253,18 @@ public class GameController : MonoBehaviour
                 game_player_props.hp, game_player_props.hp_max,
                 game_player_props.damage, game_player_props.shoot_cooldown,
                 game_player_props.projectile_speed, game_player_props.projectile_duration, game_player_props.projectile_scale);
+    }
+
+    void UpdateMenuCam()
+    {
+        float camera_dist = 100;
+        float camera_height = 150;
+        float angle = Time.time * 1;
+        float x = (float)Math.Cos(angle) * camera_dist + floor_transform.position.x;
+        float z = (float)Math.Sin(angle) * camera_dist + floor_transform.position.z;
+        Vector3 camera_pos = new Vector3(x, camera_height, z);
+        main_cam.transform.SetPositionAndRotation(camera_pos,
+                Quaternion.LookRotation(floor_transform.position - camera_pos, Vector3.up));
     }
 }
 
