@@ -164,9 +164,9 @@ public class GameController : MonoBehaviour
                 UI_refresh_time_cooldown = UI_refresh_time;
                 NewMaze();
             }
-
-            UpdateMenuCam();
         }
+
+        UpdateMenuCam();
 
         if (Input.GetKeyDown(KeyCode.R)) {
             OnGoal();
