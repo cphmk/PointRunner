@@ -250,11 +250,11 @@ Transform:
   m_GameObject: {fileID: 314357264}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -960.00006, y: -894.3964, z: 0}
-  m_LocalScale: {x: 2.1867883, y: 2.186788, z: 2.186788}
+  m_LocalPosition: {x: -960.0001, y: -894.3965, z: 0}
+  m_LocalScale: {x: 2.1867886, y: 2.186788, z: 2.186788}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2018517717}
+  m_Father: {fileID: 904826561}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!1 &608626983
 GameObject:
@@ -554,6 +554,7 @@ RectTransform:
   - {fileID: 860557258}
   - {fileID: 1214586607}
   - {fileID: 2037229867}
+  - {fileID: 314357268}
   m_Father: {fileID: 2018517717}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1456,6 +1457,8 @@ MonoBehaviour:
   enemy_capsule_prefab: {fileID: 150324615169117089, guid: cb722e20a6e247155b9f122c88b5b839, type: 3}
   floor_prefab: {fileID: 7307244895109135616, guid: d3b51776c7b428cc2b3b0c5083eb65a0, type: 3}
   minimap_marker_prefab: {fileID: 1925879620858702800, guid: 8858929e44177422bb805b4faae81ed8, type: 3}
+  goal_prefab: {fileID: 6419532341073514092, guid: b6d73560f5a02505d98900b857c01c0f, type: 3}
+  spawn_prefab: {fileID: 1283052520890337621, guid: 7fbf1c0476b34627a9174d4159bdf6ac, type: 3}
   maze_width: 5
   maze_height: 5
   maze_wall_width: 10
@@ -1829,7 +1832,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 904826561}
-  - {fileID: 314357268}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}

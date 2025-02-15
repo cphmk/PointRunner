@@ -16,6 +16,9 @@ public class GameController : MonoBehaviour
     public GameObject enemy_capsule_prefab;
     public GameObject floor_prefab;
     public GameObject minimap_marker_prefab;
+    public GameObject goal_prefab;
+    public GameObject spawn_prefab;
+    public GameObject exclamation_mark_prefab;
     /* runtime game objects */
     GameObject go_main_cam;
     GameObject go_maze;
@@ -23,6 +26,12 @@ public class GameController : MonoBehaviour
     GameObject go_player;
     GameObject go_minimap_cam;
     GameObject go_minimap_marker;
+    GameObject go_minimap_marker_spawn;
+    GameObject go_minimap_marker_goal;
+    GameObject go_goal;
+    GameObject go_goal_excl;
+    GameObject go_spawn;
+    GameObject go_spawn_excl;
     List<GameObject> go_enemies;
 
     Camera main_cam;
@@ -128,9 +137,8 @@ public class GameController : MonoBehaviour
 
             if (game_player_props.hp < 1) {
                 Debug.Log("DEAD");
+                StopGame();
             }
-
-            go_minimap_cam.GetComponent<Transform>().position = new Vector3(player_pos.x, player_pos.y + minimap_cam_distance, player_pos.z);
             go_minimap_marker.GetComponent<Transform>().position = new Vector3(player_pos.x, player_pos.y + minimap_cam_distance - 10, player_pos.z);
         }
 
@@ -145,9 +153,7 @@ public class GameController : MonoBehaviour
         }
 
         if (Input.GetKeyDown(KeyCode.R)) {
-            // StopGame();
-            // NewMaze();
-            // StartGame();
+            OnGoal();
         }
 
         if (Input.GetKeyDown(KeyCode.Escape)) {
@@ -158,6 +164,13 @@ public class GameController : MonoBehaviour
 
     void NewMaze()
     {
+        Destroy(go_goal);
+        Destroy(go_goal_excl);
+        Destroy(go_minimap_marker_goal);
+        Destroy(go_spawn);
+        Destroy(go_spawn_excl);
+        Destroy(go_minimap_marker_spawn);
+
         maze_width = 5 + 2 * game_level + (game_rng.Next() % 5);
         maze_height = 5 + 2 * game_level + (game_rng.Next() % 5);
         maze = new Maze(maze_width, maze_height);
@@ -189,10 +202,39 @@ public class GameController : MonoBehaviour
         mesh_for_collider.RecalculateNormals();
         mesh_collider.sharedMesh = mesh_for_collider;
 
+        Vector3 goal_pos = new Vector3(maze.finish_world.x * maze_wall_width + maze_wall_width / 2,
+                    floor_transform.position.y, maze.finish_world.y * maze_wall_width + maze_wall_width / 2);
+        Vector3 spawn_pos = new Vector3(maze.start_world.x * maze_wall_width + maze_wall_width / 2,
+                    floor_transform.position.y, maze.start_world.y * maze_wall_width + maze_wall_width / 2);
+        Vector3 player_pos = spawn_pos + new Vector3(-0.5f, 2, 0);
+
+        go_goal = Instantiate(goal_prefab, goal_pos, Quaternion.identity, transform);
+        go_goal_excl = Instantiate(exclamation_mark_prefab, goal_pos + Vector3.up * maze_wall_height * 1.5f + new Vector3(-12, 0, -12), Quaternion.identity, transform);
+        foreach (Transform t in go_goal_excl.transform) {
+            t.gameObject.GetComponent<Renderer>().material.color = new Color(0, 1, 0, 1);
+        }
+        go_minimap_marker_goal = Instantiate(minimap_marker_prefab, goal_pos + new Vector3(0, minimap_cam_distance - 10, 0), Quaternion.identity);
+        go_minimap_marker_goal.GetComponent<Renderer>().material.color = new Color(0, 1, 0, 1);
+
+        go_spawn = Instantiate(spawn_prefab, spawn_pos, Quaternion.identity, transform);
+        go_spawn_excl = Instantiate(exclamation_mark_prefab, spawn_pos + Vector3.up * maze_wall_height * 1.5f + new Vector3(-12, 0, -12), Quaternion.identity, transform);
+        foreach (Transform t in go_spawn_excl.transform) {
+            t.gameObject.GetComponent<Renderer>().material.color = new Color(0, 0, 1, 1);
+        }
+        go_minimap_marker_spawn = Instantiate(minimap_marker_prefab, spawn_pos + new Vector3(0, minimap_cam_distance - 10, 0), Quaternion.identity);
+        go_minimap_marker_spawn.GetComponent<Renderer>().material.color = new Color(0, 0, 1, 1);
+
         nav_mesh_surface.BuildNavMesh();
 
-        Debug.Log("maze mesh vertices: " + mesh.vertices.Length);
-        Debug.Log("maze mesh triangles: " + mesh.triangles.Length / 3);
+        go_minimap_cam.GetComponent<Transform>().position = floor_transform.position + new Vector3(0, minimap_cam_distance, 0);
+        go_minimap_cam.GetComponent<Camera>().orthographicSize = Math.Max(maze_wall_width * maze.width_world / 2, maze_wall_width * maze.height_world / 2);
+
+        go_minimap_marker.SetActive(false);
+        go_minimap_marker_spawn.SetActive(false);
+        go_minimap_marker_goal.SetActive(false);
+
+//         Debug.Log("maze mesh vertices: " + mesh.vertices.Length);
+//         Debug.Log("maze mesh triangles: " + mesh.triangles.Length / 3);
     }
 
     void StartGame()
@@ -204,11 +246,16 @@ public class GameController : MonoBehaviour
         go_UI_player_stats.SetActive(true);
         go_UI_game_stats.SetActive(true);
         go_minimap_marker.SetActive(true);
+        go_minimap_marker_spawn.SetActive(true);
+        go_minimap_marker_goal.SetActive(true);
 
-        go_player = Instantiate(player_prefab, new Vector3(maze.start_world.x * maze_wall_width + maze_wall_width / 2,
-                    floor_transform.position.y + (maze_wall_height / 2.0f) * 2,
-                    maze.start_world.y * maze_wall_width + maze_wall_width / 2),
-                Quaternion.identity, transform);
+        Vector3 goal_pos = new Vector3(maze.finish_world.x * maze_wall_width + maze_wall_width / 2,
+                    floor_transform.position.y, maze.finish_world.y * maze_wall_width + maze_wall_width / 2);
+        Vector3 spawn_pos = new Vector3(maze.start_world.x * maze_wall_width + maze_wall_width / 2,
+                    floor_transform.position.y, maze.start_world.y * maze_wall_width + maze_wall_width / 2);
+        Vector3 player_pos = spawn_pos + new Vector3(-0.5f, 2, 0);
+
+        go_player = Instantiate(player_prefab, player_pos, Quaternion.identity, transform);
         game_player_props = go_player.GetComponent<PlayerScript>();
         player_cam = go_player.GetComponent<Camera>();
 
@@ -243,7 +290,7 @@ public class GameController : MonoBehaviour
 
     void PauseGame()
     {
-        Debug.Log("PauseGame");
+        // Debug.Log("PauseGame");
         is_playing = false;
         is_paused = true;
         go_player.SetActive(false);
@@ -251,6 +298,10 @@ public class GameController : MonoBehaviour
         go_UI_minimap.SetActive(false);
         go_UI_play_button.SetActive(true);
         go_UI_title.SetActive(true);
+
+        go_minimap_marker.SetActive(false);
+        go_minimap_marker_spawn.SetActive(false);
+        go_minimap_marker_goal.SetActive(false);
         // go_UI_player_stats.SetActive(false);
         go_minimap_marker.SetActive(false);
         go_UI_resume_button.SetActive(true);
@@ -259,7 +310,7 @@ public class GameController : MonoBehaviour
 
     void ResumeGame()
     {
-        Debug.Log("ResumeGame");
+        // Debug.Log("ResumeGame");
         is_playing = true;
         is_paused = false;
         go_player.SetActive(true);
@@ -267,6 +318,9 @@ public class GameController : MonoBehaviour
         go_UI_minimap.SetActive(true);
         go_UI_play_button.SetActive(false);
         go_UI_title.SetActive(false);
+        go_minimap_marker.SetActive(true);
+        go_minimap_marker_spawn.SetActive(true);
+        go_minimap_marker_goal.SetActive(true);
         // go_UI_player_stats.SetActive(true);
         go_minimap_marker.SetActive(true);
         go_UI_resume_button.SetActive(false);
@@ -276,6 +330,8 @@ public class GameController : MonoBehaviour
     void StopGame()
     {
         is_playing = false;
+        Destroy(go_spawn);
+        Destroy(go_goal);
         Destroy(go_player);
         foreach (var e in go_enemies)
             Destroy(e);
@@ -286,6 +342,11 @@ public class GameController : MonoBehaviour
         go_UI_title.SetActive(true);
         go_UI_player_stats.SetActive(false);
         go_UI_game_stats.SetActive(false);
+
+        go_minimap_marker.SetActive(false);
+        go_minimap_marker_spawn.SetActive(false);
+        go_minimap_marker_goal.SetActive(false);
+
         go_minimap_marker.SetActive(false);
         Cursor.lockState = CursorLockMode.None;
     }
@@ -301,6 +362,15 @@ public class GameController : MonoBehaviour
                 game_player_props.hp, game_player_props.hp_max,
                 game_player_props.damage, game_player_props.shoot_cooldown,
                 game_player_props.projectile_speed, game_player_props.projectile_duration, game_player_props.projectile_scale);
+    }
+
+    void OnGoal()
+    {
+        Debug.Log("GOAL");
+        game_level++;
+        StopGame();
+        NewMaze();
+        StartGame();
     }
 
     string GetGameStatsText()

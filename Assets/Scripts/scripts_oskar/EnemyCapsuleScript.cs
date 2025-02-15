@@ -55,14 +55,34 @@ public class EnemyCapsuleScript : MonoBehaviour
         if (player == null || player_transf == null)
             return;
 
+        Color color_temp = color_orig;
+
+        if (death_anim_secs > 0) {
+            death_anim_secs -= Time.deltaTime;
+            color_temp.r = color_temp.r - (death_anim_total - death_anim_secs);
+            color_temp.g = color_temp.g - (death_anim_total - death_anim_secs);
+            color_temp.b = color_temp.b - (death_anim_total - death_anim_secs);
+        }
+
+        else if (damage_anim_remaining_secs > 0) {
+            damage_anim_remaining_secs -= Time.deltaTime;
+            color_temp.r = (float)Math.Abs(Math.Sin(Time.time * 10));
+        }
+
+        material.color = color_temp;
+
         if (landed && player.activeInHierarchy) {
+            Vector3 diff_vec = player_transf.position - transform.position;
+            float euclidean_dist = (float)Math.Sqrt(Vector3.Dot(diff_vec, diff_vec));
+            if (euclidean_dist > aggro_range)
+                return;
+
             try {
                 nma.CalculatePath(player_transf.position, path_to_player);
 
                 float d = DistToPlayer();
                 if (d <= aggro_range && d > 0.001f) {
                     nma.SetDestination(player_transf.position);
-                    Vector3 diff_vec = player_transf.position - transform.position;
                     Vector3 diff_vec_norm = Vector3.Normalize(diff_vec);
 
                     if (shoot_cooldown_left == 0) {
@@ -91,21 +111,6 @@ public class EnemyCapsuleScript : MonoBehaviour
             }
         }
 
-        Color color_temp = color_orig;
-
-        if (death_anim_secs > 0) {
-            death_anim_secs -= Time.deltaTime;
-            color_temp.r = color_temp.r - (death_anim_total - death_anim_secs);
-            color_temp.g = color_temp.g - (death_anim_total - death_anim_secs);
-            color_temp.b = color_temp.b - (death_anim_total - death_anim_secs);
-        }
-
-        else if (damage_anim_remaining_secs > 0) {
-            damage_anim_remaining_secs -= Time.deltaTime;
-            color_temp.r = (float)Math.Abs(Math.Sin(Time.time * 10));
-        }
-
-        material.color = color_temp;
     }
 
     void OnCollisionEnter(Collision collision_data)
