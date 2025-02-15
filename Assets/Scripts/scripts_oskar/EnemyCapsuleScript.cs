@@ -5,6 +5,7 @@ using UnityEngine.AI;
 public class EnemyCapsuleScript : MonoBehaviour
 {
     public GameObject projectile_prefab;
+    public GameObject reward_prefab;
 
     GameObject game_controller;
     GameObject player;
@@ -14,8 +15,11 @@ public class EnemyCapsuleScript : MonoBehaviour
     Rigidbody rb;
     Material material;
     Color color_orig;
+    Collider collider;
+    System.Random rng = new System.Random();
 
     /* game logic*/
+    public float drop_chance = 1;
     public float aggro_range = 15.0f;
     public bool landed = false;
     public float shoot_cooldown = 0.5f;
@@ -30,6 +34,7 @@ public class EnemyCapsuleScript : MonoBehaviour
     float death_anim_total = 0.5f;
     float death_anim_secs = 0;
     float damage_anim_remaining_secs = 0;
+    bool dead = false;
 
     void Awake()
     {
@@ -40,6 +45,7 @@ public class EnemyCapsuleScript : MonoBehaviour
         nma.enabled = false;
         material = GetComponent<Renderer>().material;
         color_orig = material.color;
+        collider = GetComponent<Collider>();
     }
 
     void Start()
@@ -70,6 +76,9 @@ public class EnemyCapsuleScript : MonoBehaviour
         }
 
         material.color = color_temp;
+
+        if (dead)
+            return;
 
         if (landed && player.activeInHierarchy) {
             Vector3 diff_vec = player_transf.position - transform.position;
@@ -136,7 +145,8 @@ public class EnemyCapsuleScript : MonoBehaviour
 
     void OnProjectileHit(int damage)
     {
-        // Debug.Log("EnemyCapsule OnProjectileHit: " + damage);
+        if (dead)
+            return;
         hp -= damage;
         if (hp < 1)
             KillThis();
@@ -150,6 +160,12 @@ public class EnemyCapsuleScript : MonoBehaviour
 
     void KillThis()
     {
+        dead = true;
+        collider.enabled = false;
+        float r = (rng.Next() % 100 + 1) / 100.0f;
+        if (r <= drop_chance) {
+            Instantiate(reward_prefab, new Vector3(transform.position.x, 1, transform.position.z), Quaternion.identity, game_controller.transform);
+        }
         death_anim_secs = death_anim_total;
         Destroy(gameObject, death_anim_total);
     }

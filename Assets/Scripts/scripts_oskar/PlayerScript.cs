@@ -67,4 +67,34 @@ public class PlayerScript : MonoBehaviour
         hp -= damage;
         game_controller.SendMessage("DamagePlayer", damage);
     }
+
+    void OnReward(Reward reward)
+    {
+        game_controller.SendMessage("RewardPlayer");
+        hp += reward.hp;
+        damage += reward.damage;
+        hp_max += reward.hp_max;
+        projectile_speed += reward.projectile_speed;
+        projectile_scale += reward.projectile_scale;
+        projectile_duration += reward.projectile_duration;
+        shoot_cooldown -= reward.shoot_cooldown;
+
+        string reward_str = "";
+        if (reward.hp > 0)
+            reward_str = "+" + reward.hp.ToString() + "HP";
+        if (reward.damage > 0)
+            reward_str = "+" + reward.damage.ToString() + "DAMAGE";
+        if (reward.hp_max > 0)
+            reward_str = "+" + reward.hp_max.ToString() + "MAX HP";
+        if (reward.projectile_speed > 0)
+            reward_str = "+" + reward.projectile_speed.ToString() + "PROJ SPEED";
+        if (reward.projectile_scale > 0)
+            reward_str = "+" + reward.projectile_scale.ToString() + "PROJ SCALE";
+        if (reward.projectile_duration > 0)
+            reward_str = "+" + reward.projectile_duration.ToString() + "PROJ DURATION";
+        if (reward.shoot_cooldown > 0)
+            reward_str = "-" + reward.shoot_cooldown.ToString() + "RELOAD TIME";
+
+        Debug.Log(reward_str);
+    }
 }

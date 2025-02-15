@@ -5,6 +5,7 @@ MonoImporter:
   serializedVersion: 2
   defaultReferences:
   - projectile_prefab: {fileID: 7092642468565383246, guid: 1fb43e4f503ca7ae792aeff4b743c301, type: 3}
+  - reward_prefab: {fileID: 3608288525038464593, guid: b0d12c336b3a508acab93a4b2b82e6cf, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

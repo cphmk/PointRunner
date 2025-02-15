@@ -39,8 +39,10 @@ public class GameController : MonoBehaviour
 
     Transform floor_transform;
 
-    public int maze_width;
-    public int maze_height;
+    public int maze_base_width;
+    public int maze_base_height;
+    int maze_width;
+    int maze_height;
     public int maze_wall_width;
     public int maze_wall_height;
     public int minimap_cam_distance = 50;
@@ -77,6 +79,8 @@ public class GameController : MonoBehaviour
 
     float damage_blink_total_secs;
     float damage_blink_remaining_secs;
+    float reward_blink_total_secs;
+    float reward_blink_remaining_secs;
 
     void Start()
     {
@@ -131,6 +135,12 @@ public class GameController : MonoBehaviour
                 damage_blink_remaining_secs -= Time.deltaTime;
                 UI_overlay_image.color = new Color(1, 0, 0, 0.25f * Math.Abs((float)Math.Sin(Time.time * 20)));
             }
+
+            else if (reward_blink_remaining_secs > 0) {
+                reward_blink_remaining_secs -= Time.deltaTime;
+                UI_overlay_image.color = new Color(0, 1, 0, 0.25f * Math.Abs((float)Math.Sin(Time.time * 20)));
+            }
+
             else {
                 UI_overlay_image.color = new Color(1, 0, 0, 0);
             }
@@ -154,6 +164,11 @@ public class GameController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.R)) {
             OnGoal();
+            RewardPlayer();
+        }
+
+        if (Input.GetKeyDown(KeyCode.U)) {
+            RewardPlayer();
         }
 
         if (Input.GetKeyDown(KeyCode.Escape)) {
@@ -171,8 +186,8 @@ public class GameController : MonoBehaviour
         Destroy(go_spawn_excl);
         Destroy(go_minimap_marker_spawn);
 
-        maze_width = 5 + (int)(Math.Sqrt(game_level)) + (game_rng.Next() % 3);
-        maze_height = 5 + (int)(Math.Sqrt(game_level)) + (game_rng.Next() % 3);
+        maze_width = maze_base_width + (int)(Math.Sqrt(game_level)) + (game_rng.Next() % 3);
+        maze_height = maze_base_height + (int)(Math.Sqrt(game_level)) + (game_rng.Next() % 3);
         maze = new Maze(maze_width, maze_height);
         maze_mesh_generator = new MazeMeshGenerator();
         maze.Gen();
@@ -211,7 +226,7 @@ public class GameController : MonoBehaviour
         go_goal = Instantiate(goal_prefab, goal_pos, Quaternion.identity, transform);
         go_goal_excl = Instantiate(exclamation_mark_prefab, goal_pos + Vector3.up * maze_wall_height * 1.5f + new Vector3(-12, 0, -12), Quaternion.identity, transform);
         foreach (Transform t in go_goal_excl.transform) {
-            t.gameObject.GetComponent<Renderer>().material.color = new Color(0, 1, 0, 1);
+            t.gameObject.GetComponent<Renderer>().material.color = new Color(0, 1, 0, 0.5f);
         }
         go_minimap_marker_goal = Instantiate(minimap_marker_prefab, goal_pos + new Vector3(0, minimap_cam_distance - 10, 0), Quaternion.identity);
         go_minimap_marker_goal.GetComponent<Renderer>().material.color = new Color(0, 1, 0, 1);
@@ -219,7 +234,7 @@ public class GameController : MonoBehaviour
         go_spawn = Instantiate(spawn_prefab, spawn_pos, Quaternion.identity, transform);
         go_spawn_excl = Instantiate(exclamation_mark_prefab, spawn_pos + Vector3.up * maze_wall_height * 1.5f + new Vector3(-12, 0, -12), Quaternion.identity, transform);
         foreach (Transform t in go_spawn_excl.transform) {
-            t.gameObject.GetComponent<Renderer>().material.color = new Color(0, 0, 1, 1);
+            t.gameObject.GetComponent<Renderer>().material.color = new Color(0, 0, 1, 0.5f);
         }
         go_minimap_marker_spawn = Instantiate(minimap_marker_prefab, spawn_pos + new Vector3(0, minimap_cam_distance - 10, 0), Quaternion.identity);
         go_minimap_marker_spawn.GetComponent<Renderer>().material.color = new Color(0, 0, 1, 1);
@@ -330,6 +345,7 @@ public class GameController : MonoBehaviour
     void StopGame()
     {
         game_level = 1;
+        game_points = 0;
 
         CleanUp();
 
@@ -364,6 +380,12 @@ public class GameController : MonoBehaviour
         damage_blink_remaining_secs = 0.25f * (float)Math.Sqrt(d);
     }
 
+    void RewardPlayer()
+    {
+        game_points++;
+        reward_blink_remaining_secs = 0.25f;
+    }
+
     string GetPlayerStatsText()
     {
         return string.Format("HP: {0}/{1} DMG: {2} RELOAD SPEED: {3} PROJ SPEED/DUR/SCALE: {4}/{5}/{6}",
@@ -374,11 +396,30 @@ public class GameController : MonoBehaviour
 
     void OnGoal()
     {
-        Debug.Log("GOAL");
         game_level++;
+
+        PlayerStats ps = new PlayerStats();
+        ps.hp = game_player_props.hp;
+        ps.hp_max = game_player_props.hp_max;
+        ps.damage = game_player_props.damage;
+        ps.projectile_speed = game_player_props.projectile_speed;
+        ps.projectile_scale = game_player_props.projectile_scale;
+        ps.projectile_duration = game_player_props.projectile_duration;
+        ps.shoot_cooldown = game_player_props.shoot_cooldown;
+
         CleanUp();
         NewMaze();
         StartGame();
+
+        game_player_props.hp = ps.hp_max;
+        game_player_props.hp_max = ps.hp_max;
+        game_player_props.damage = ps.damage;
+        game_player_props.projectile_speed = ps.projectile_speed;
+        game_player_props.projectile_scale = ps.projectile_scale;
+        game_player_props.projectile_duration = ps.projectile_duration;
+        game_player_props.shoot_cooldown = ps.shoot_cooldown;
+
+        RewardPlayer();
     }
 
     string GetGameStatsText()
@@ -397,6 +438,18 @@ public class GameController : MonoBehaviour
         main_cam.transform.SetPositionAndRotation(camera_pos,
                 Quaternion.LookRotation(floor_transform.position - camera_pos, Vector3.up));
     }
+}
+
+class PlayerStats
+{
+    public float shoot_cooldown = 0.5f;
+    public int hp = 100;
+    public int hp_max = 100;
+    public int damage = 1;
+    public int collision_damage = 1;
+    public int projectile_speed = 2000;
+    public float projectile_scale = 0.1f;
+    public float projectile_duration = 1;
 }
 
 class MazeMeshGenerator

@@ -224,7 +224,7 @@ Camera:
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 45
-  orthographic: 0
+  orthographic: 1
   orthographic size: 5
   m_Depth: 0
   m_CullingMask:
@@ -1459,8 +1459,9 @@ MonoBehaviour:
   minimap_marker_prefab: {fileID: 1925879620858702800, guid: 8858929e44177422bb805b4faae81ed8, type: 3}
   goal_prefab: {fileID: 6419532341073514092, guid: b6d73560f5a02505d98900b857c01c0f, type: 3}
   spawn_prefab: {fileID: 1283052520890337621, guid: 7fbf1c0476b34627a9174d4159bdf6ac, type: 3}
-  maze_width: 5
-  maze_height: 5
+  exclamation_mark_prefab: {fileID: 5753764113413976695, guid: cbe2c20de1b3fc5d0bf8589199e53fca, type: 3}
+  maze_base_width: 3
+  maze_base_height: 3
   maze_wall_width: 10
   maze_wall_height: 20
   minimap_cam_distance: 100

@@ -12,7 +12,7 @@ public class GoalScript : MonoBehaviour
 
     void OnCollisionEnter(Collision collision_data)
     {
-        Debug.Log("OnCollisionEnter");
+        // Debug.Log("OnCollisionEnter");
         if (collision_data.gameObject.CompareTag("Player"))
             game_controller.SendMessage("OnGoal");
     }
