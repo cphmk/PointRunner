@@ -24,6 +24,7 @@ public class GameController : MonoBehaviour
     GameObject go_minimap_cam;
     GameObject go_minimap_marker;
     List<GameObject> go_enemies;
+    /* UI */
 
     Camera main_cam;
     Camera player_cam;
@@ -42,6 +43,7 @@ public class GameController : MonoBehaviour
 
     System.Random game_rng = new System.Random();
 
+    bool is_playing = false;
     int game_level = 1;
     int game_num_enemies = 10;
     PlayerScript game_player_props;
@@ -50,6 +52,12 @@ public class GameController : MonoBehaviour
     GameObject UI_overlay;
     Image UI_overlay_image;
     TextMeshProUGUI text_player_stats;
+    GameObject go_UI_player_stats;
+    GameObject go_UI_minimap;
+    GameObject go_UI_play_button;
+    GameObject go_UI_title;
+    Button UI_play_button;
+    TextMeshProUGUI UI_title;
 
     float damage_blink_total_secs;
     float damage_blink_remaining_secs;
@@ -69,16 +77,47 @@ public class GameController : MonoBehaviour
         UI = GameObject.Find("UI");
         UI_overlay = GameObject.Find("Overlay");
         UI_overlay_image = UI_overlay.GetComponent<Image>();
+        go_UI_play_button = GameObject.Find("PlayButton");
+        UI_play_button = go_UI_play_button.GetComponent<Button>();
+        go_UI_minimap = GameObject.Find("MiniMap");
+        go_UI_title = GameObject.Find("TitleText");
+        go_UI_player_stats = GameObject.Find("TextStats");
+        UI_title = go_UI_title.GetComponent<TextMeshProUGUI>();
 
         text_player_stats = GameObject.Find("TextStats").GetComponent<TextMeshProUGUI>();
 
+        UI_play_button.onClick.AddListener(() => { NewMaze(); StartGame();});
+
         NewMaze();
-        StartGame();
+        StopGame();
     }
 
     void Update()
     {
-        Vector3 player_pos = go_player.GetComponent<Transform>().position;
+        if (is_playing) {
+            Vector3 player_pos = go_player.GetComponent<Transform>().position;
+
+            if (game_player_props != null)
+                text_player_stats.text = GetPlayerStatsText();
+            // text_player_stats.text = string.Format("HP: {0}/{1}", game_player_props.hp, game_player_props.hp_max);
+            else
+                text_player_stats.text = "";
+
+            if (damage_blink_remaining_secs > 0) {
+                damage_blink_remaining_secs -= Time.deltaTime;
+                UI_overlay_image.color = new Color(1, 0, 0, 0.25f * Math.Abs((float)Math.Sin(Time.time * 20)));
+            }
+            else {
+                UI_overlay_image.color = new Color(1, 0, 0, 0);
+            }
+
+            if (game_player_props.hp < 1) {
+                Debug.Log("DEAD");
+            }
+
+            go_minimap_cam.GetComponent<Transform>().position = new Vector3(player_pos.x, player_pos.y + minimap_cam_distance, player_pos.z);
+            go_minimap_marker.GetComponent<Transform>().position = new Vector3(player_pos.x, player_pos.y + minimap_cam_distance - 10, player_pos.z);
+        }
 
         if (Input.GetKeyDown(KeyCode.R)) {
             StopGame();
@@ -86,26 +125,11 @@ public class GameController : MonoBehaviour
             StartGame();
         }
 
-        if (game_player_props != null)
-            text_player_stats.text = GetPlayerStatsText();
-            // text_player_stats.text = string.Format("HP: {0}/{1}", game_player_props.hp, game_player_props.hp_max);
-        else
-            text_player_stats.text = "";
-
-        if (damage_blink_remaining_secs > 0) {
-            damage_blink_remaining_secs -= Time.deltaTime;
-            UI_overlay_image.color = new Color(1, 0, 0, 0.25f * Math.Abs((float)Math.Sin(Time.time * 20)));
-        }
-        else {
-            UI_overlay_image.color = new Color(1, 0, 0, 0);
+        if (Input.GetKeyDown(KeyCode.Escape)) {
+            StopGame();
+            NewMaze();
         }
 
-        if (game_player_props.hp < 1) {
-            Debug.Log("DEAD");
-        }
-
-        go_minimap_cam.GetComponent<Transform>().position = new Vector3(player_pos.x, player_pos.y + minimap_cam_distance, player_pos.z);
-        go_minimap_marker.GetComponent<Transform>().position = new Vector3(player_pos.x, player_pos.y + minimap_cam_distance - 10, player_pos.z);
     }
 
     void NewMaze()
@@ -116,6 +140,9 @@ public class GameController : MonoBehaviour
 
         floor_transform.position = new Vector3((maze.width_world / 2.0f) * maze_wall_width, 0.0f, (maze.height_world / 2.0f) * maze_wall_width);
         floor_transform.localScale = new Vector3(maze.width_world, 1.0f, maze.height_world);
+
+        main_cam.transform.SetPositionAndRotation(new Vector3(floor_transform.position.x - 100, 200, floor_transform.position.z - 100),
+                Quaternion.Euler(60, 45, 0));
 
         maze_mesh_generator.GenMesh(maze, floor_transform.position.y, maze_wall_width, maze_wall_height);
 
@@ -148,6 +175,11 @@ public class GameController : MonoBehaviour
     void StartGame()
     {
         go_main_cam.SetActive(false);
+        go_UI_play_button.SetActive(false);
+        go_UI_title.SetActive(false);
+        go_UI_minimap.SetActive(true);
+        go_UI_player_stats.SetActive(true);
+        go_minimap_marker.SetActive(true);
 
         go_player = Instantiate(player_prefab, new Vector3(maze.start_world.x * maze_wall_width + maze_wall_width / 2,
                     floor_transform.position.y + (maze_wall_height / 2.0f) * 2,
@@ -176,14 +208,22 @@ public class GameController : MonoBehaviour
             enemy_props.hp = 1 + game_level;
             go_enemies.Add(enemy);
         }
+
+        is_playing = true;
     }
 
     void StopGame()
     {
+        is_playing = false;
         Destroy(go_player);
         foreach (var e in go_enemies)
             Destroy(e);
         go_main_cam.SetActive(true);
+        go_UI_minimap.SetActive(false);
+        go_UI_play_button.SetActive(true);
+        go_UI_title.SetActive(true);
+        go_UI_player_stats.SetActive(false);
+        go_minimap_marker.SetActive(false);
     }
 
     void DamagePlayer(int d)
