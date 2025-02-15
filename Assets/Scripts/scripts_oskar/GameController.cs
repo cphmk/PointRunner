@@ -171,8 +171,8 @@ public class GameController : MonoBehaviour
         Destroy(go_spawn_excl);
         Destroy(go_minimap_marker_spawn);
 
-        maze_width = 5 + 2 * game_level + (game_rng.Next() % 5);
-        maze_height = 5 + 2 * game_level + (game_rng.Next() % 5);
+        maze_width = 5 + (int)(Math.Sqrt(game_level)) + (game_rng.Next() % 3);
+        maze_height = 5 + (int)(Math.Sqrt(game_level)) + (game_rng.Next() % 3);
         maze = new Maze(maze_width, maze_height);
         maze_mesh_generator = new MazeMeshGenerator();
         maze.Gen();
@@ -329,12 +329,11 @@ public class GameController : MonoBehaviour
 
     void StopGame()
     {
+        game_level = 1;
+
+        CleanUp();
+
         is_playing = false;
-        Destroy(go_spawn);
-        Destroy(go_goal);
-        Destroy(go_player);
-        foreach (var e in go_enemies)
-            Destroy(e);
         go_main_cam.SetActive(true);
         go_UI_minimap.SetActive(false);
         go_UI_play_button.SetActive(true);
@@ -349,6 +348,15 @@ public class GameController : MonoBehaviour
 
         go_minimap_marker.SetActive(false);
         Cursor.lockState = CursorLockMode.None;
+    }
+
+    void CleanUp()
+    {
+        Destroy(go_spawn);
+        Destroy(go_goal);
+        Destroy(go_player);
+        foreach (var e in go_enemies)
+            Destroy(e);
     }
 
     void DamagePlayer(int d)
@@ -368,7 +376,7 @@ public class GameController : MonoBehaviour
     {
         Debug.Log("GOAL");
         game_level++;
-        StopGame();
+        CleanUp();
         NewMaze();
         StartGame();
     }
