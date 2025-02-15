@@ -1,10 +1,13 @@
 using System;
 using UnityEngine;
+using TMPro;
 
 public class PlayerScript : MonoBehaviour
 {
     public GameObject projectile_prefab;
+    public Color status_text_color = Color.green;
 
+    TextMeshProUGUI status_text;
     GameObject game_controller;
     Camera cam;
 
@@ -17,6 +20,8 @@ public class PlayerScript : MonoBehaviour
     public int projectile_speed = 2000;
     public float projectile_scale = 0.1f;
     public float projectile_duration = 1;
+    float status_text_fade_time = 1;
+    float status_text_fade = 0;
 
     void Awake()
     {
@@ -24,6 +29,8 @@ public class PlayerScript : MonoBehaviour
 
     void Start()
     {
+        status_text = GameObject.Find("PlayerUpdateText").GetComponent<TextMeshProUGUI>();
+        status_text.text = "";
         cam = GetComponent<FirstPersonController>().playerCamera;
         game_controller = transform.parent.gameObject;
     }
@@ -52,6 +59,13 @@ public class PlayerScript : MonoBehaviour
         }
         shoot_cooldown_left -= Time.deltaTime;
         shoot_cooldown_left = Math.Max(0, shoot_cooldown_left);
+
+        if (status_text_fade > 0) {
+            status_text_fade -= Time.deltaTime;
+            status_text.color = status_text_color - new Color(0, 0, 0, (status_text_fade_time - status_text_fade) / status_text_fade_time);
+        }
+        else
+            status_text.color = status_text_color - new Color(0, 0, 0, 1);
     }
 
     void OnProjectileHit(int damage)
@@ -96,6 +110,10 @@ public class PlayerScript : MonoBehaviour
         if (reward.shoot_cooldown > 0)
             reward_str = "-" + (shoot_cooldown / 20.0f).ToString() + "RELOAD TIME";
 
-        Debug.Log(reward_str);
+        status_text.text = reward_str;
+        status_text.color = status_text_color;
+        status_text_fade = status_text_fade_time;
+
+        // Debug.Log(reward_str);
     }
 }

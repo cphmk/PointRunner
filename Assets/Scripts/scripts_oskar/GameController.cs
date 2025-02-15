@@ -67,6 +67,7 @@ public class GameController : MonoBehaviour
     Image UI_overlay_image;
     TextMeshProUGUI UI_game_stats_text;
     TextMeshProUGUI UI_player_stats_text;
+    TextMeshProUGUI goal_text;
     GameObject go_UI_player_stats;
     GameObject go_UI_game_stats;
     GameObject go_UI_minimap;
@@ -76,6 +77,9 @@ public class GameController : MonoBehaviour
     Button UI_play_button;
     Button UI_resume_button;
     TextMeshProUGUI UI_title;
+    Color goal_text_color = Color.green;
+    float goal_text_fade_time = 5;
+    float goal_text_fade = 0;
 
     float damage_blink_total_secs;
     float damage_blink_remaining_secs;
@@ -109,6 +113,8 @@ public class GameController : MonoBehaviour
         go_UI_game_stats = GameObject.Find("GameStatsText");
         UI_player_stats_text = go_UI_player_stats.GetComponent<TextMeshProUGUI>();
         UI_game_stats_text = go_UI_game_stats.GetComponent<TextMeshProUGUI>();
+        goal_text = GameObject.Find("GoalText").GetComponent<TextMeshProUGUI>();
+        goal_text.text = "";
 
         UI_play_button.onClick.AddListener(() => { StopGame(); NewMaze(); StartGame();});
         UI_resume_button.onClick.AddListener(() => { ResumeGame();});
@@ -174,6 +180,14 @@ public class GameController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape)) {
             PauseGame();
         }
+
+
+        if (goal_text_fade > 0) {
+            goal_text_fade -= Time.deltaTime;
+            goal_text.color = goal_text_color - new Color(0, 0, 0, (goal_text_fade_time - goal_text_fade) / goal_text_fade_time);
+        }
+        else
+            goal_text.color = goal_text_color - new Color(0, 0, 0, 1);
 
     }
 
@@ -305,7 +319,6 @@ public class GameController : MonoBehaviour
 
     void PauseGame()
     {
-        // Debug.Log("PauseGame");
         is_playing = false;
         is_paused = true;
         go_player.SetActive(false);
@@ -317,7 +330,6 @@ public class GameController : MonoBehaviour
         go_minimap_marker.SetActive(false);
         go_minimap_marker_spawn.SetActive(false);
         go_minimap_marker_goal.SetActive(false);
-        // go_UI_player_stats.SetActive(false);
         go_minimap_marker.SetActive(false);
         go_UI_resume_button.SetActive(true);
         Cursor.lockState = CursorLockMode.None;
@@ -325,7 +337,6 @@ public class GameController : MonoBehaviour
 
     void ResumeGame()
     {
-        // Debug.Log("ResumeGame");
         is_playing = true;
         is_paused = false;
         go_player.SetActive(true);
@@ -336,7 +347,6 @@ public class GameController : MonoBehaviour
         go_minimap_marker.SetActive(true);
         go_minimap_marker_spawn.SetActive(true);
         go_minimap_marker_goal.SetActive(true);
-        // go_UI_player_stats.SetActive(true);
         go_minimap_marker.SetActive(true);
         go_UI_resume_button.SetActive(false);
         Cursor.lockState = CursorLockMode.Locked;
@@ -420,6 +430,10 @@ public class GameController : MonoBehaviour
         game_player_props.shoot_cooldown = ps.shoot_cooldown;
 
         RewardPlayer();
+
+        goal_text.text = "LEVEL " + game_level.ToString();
+        goal_text.color = goal_text_color;
+        goal_text_fade = goal_text_fade_time;
     }
 
     string GetGameStatsText()
