@@ -9,5 +9,6 @@ This project uses third-party assets from the Unity Asset Store.
 To run the project correctly, please download and install the following:
 
 - [Desert Kits 64 Sample](https://assetstore.unity.com/packages/3d/environments/landscapes/desert-kits-64-sample-86482)
+- [Skybox](https://assetstore.unity.com/packages/2d/textures-materials/sky/3-skyboxes-25142)
 
 Once downloaded, move the asset folder to:
