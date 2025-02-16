@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Enemy
   - WallDoor
+  - CharacterSelection
   layers:
   - Default
   - TransparentFX

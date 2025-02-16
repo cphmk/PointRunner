@@ -6,6 +6,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 using Unity.AI.Navigation;
 using TMPro;
 
@@ -73,9 +74,11 @@ public class GameController : MonoBehaviour
     GameObject go_UI_minimap;
     GameObject go_UI_play_button;
     GameObject go_UI_resume_button;
+    GameObject go_UI_mainmenu_button;
     GameObject go_UI_title;
     Button UI_play_button;
     Button UI_resume_button;
+    Button UI_mainmenu_button;
     TextMeshProUGUI UI_title;
     Color goal_text_color = Color.green;
     float goal_text_fade_time = 5;
@@ -105,6 +108,8 @@ public class GameController : MonoBehaviour
         UI_play_button = go_UI_play_button.GetComponent<Button>();
         go_UI_resume_button = GameObject.Find("ResumeButton");
         UI_resume_button = go_UI_resume_button.GetComponent<Button>();
+        go_UI_mainmenu_button = GameObject.Find("MainMenuButton");
+        UI_mainmenu_button = go_UI_mainmenu_button.GetComponent<Button>();
         go_UI_minimap = GameObject.Find("MiniMap");
         go_UI_title = GameObject.Find("TitleText");
         UI_title = go_UI_title.GetComponent<TextMeshProUGUI>();
@@ -118,6 +123,7 @@ public class GameController : MonoBehaviour
 
         UI_play_button.onClick.AddListener(() => { StopGame(); NewMaze(); StartGame();});
         UI_resume_button.onClick.AddListener(() => { ResumeGame();});
+        UI_mainmenu_button.onClick.AddListener(() => { SceneManager.LoadScene("Menu");});
 
         go_UI_resume_button.SetActive(false);
 
@@ -270,6 +276,7 @@ public class GameController : MonoBehaviour
     {
         go_main_cam.SetActive(false);
         go_UI_play_button.SetActive(false);
+        go_UI_mainmenu_button.SetActive(false);
         go_UI_title.SetActive(false);
         go_UI_minimap.SetActive(true);
         go_UI_player_stats.SetActive(true);
@@ -325,6 +332,7 @@ public class GameController : MonoBehaviour
         go_main_cam.SetActive(true);
         go_UI_minimap.SetActive(false);
         go_UI_play_button.SetActive(true);
+        go_UI_mainmenu_button.SetActive(true);
         go_UI_title.SetActive(true);
 
         go_minimap_marker.SetActive(false);
@@ -349,6 +357,7 @@ public class GameController : MonoBehaviour
         go_minimap_marker_goal.SetActive(true);
         go_minimap_marker.SetActive(true);
         go_UI_resume_button.SetActive(false);
+        go_UI_mainmenu_button.SetActive(false);
         Cursor.lockState = CursorLockMode.Locked;
     }
 
@@ -364,6 +373,7 @@ public class GameController : MonoBehaviour
         go_UI_minimap.SetActive(false);
         go_UI_play_button.SetActive(true);
         go_UI_resume_button.SetActive(false);
+        go_UI_mainmenu_button.SetActive(true);
         go_UI_title.SetActive(true);
         go_UI_player_stats.SetActive(false);
         go_UI_game_stats.SetActive(false);
