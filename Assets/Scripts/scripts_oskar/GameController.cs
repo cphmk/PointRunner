@@ -289,6 +289,7 @@ public class GameController : MonoBehaviour
     void StartGame()
     {
         go_main_cam.SetActive(false);
+        go_hp_bar.SetActive(true);
         go_UI_play_button.SetActive(false);
         go_UI_mainmenu_button.SetActive(false);
         go_UI_title.SetActive(false);
@@ -348,6 +349,7 @@ public class GameController : MonoBehaviour
         go_UI_play_button.SetActive(true);
         go_UI_mainmenu_button.SetActive(true);
         go_UI_title.SetActive(true);
+        go_hp_bar.SetActive(false);
 
         go_minimap_marker.SetActive(false);
         go_minimap_marker_spawn.SetActive(false);
@@ -362,6 +364,7 @@ public class GameController : MonoBehaviour
         is_playing = true;
         is_paused = false;
         go_player.SetActive(true);
+        go_hp_bar.SetActive(true);
         go_main_cam.SetActive(false);
         go_UI_minimap.SetActive(true);
         go_UI_play_button.SetActive(false);
@@ -386,6 +389,7 @@ public class GameController : MonoBehaviour
         go_main_cam.SetActive(true);
         go_UI_minimap.SetActive(false);
         go_UI_play_button.SetActive(true);
+        go_hp_bar.SetActive(false);
         go_UI_resume_button.SetActive(false);
         go_UI_mainmenu_button.SetActive(true);
         go_UI_title.SetActive(true);
