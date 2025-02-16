@@ -56,8 +56,8 @@ public class EnemyCapsuleScript : MonoBehaviour
     void Start()
     {
         hp = max_hp;
-        bar_hp_max = Instantiate(bar_prefab, transform.position + Vector3.up, Quaternion.identity, game_controller.transform);
-        bar_hp_cur = Instantiate(bar_prefab, transform.position + Vector3.up, Quaternion.identity, game_controller.transform);
+        bar_hp_max = Instantiate(bar_prefab, transform.position + Vector3.up, Quaternion.identity, transform);
+        bar_hp_cur = Instantiate(bar_prefab, transform.position + Vector3.up, Quaternion.identity, transform);
         bar_hp_max.GetComponent<Renderer>().material.color = Color.red;
         bar_hp_cur.GetComponent<Renderer>().material.color = Color.green;
     }
