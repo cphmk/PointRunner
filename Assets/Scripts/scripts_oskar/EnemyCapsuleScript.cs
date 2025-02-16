@@ -6,6 +6,7 @@ public class EnemyCapsuleScript : MonoBehaviour
 {
     public GameObject projectile_prefab;
     public GameObject reward_prefab;
+    public GameObject bar_prefab;
 
     GameObject game_controller;
     GameObject player;
@@ -18,13 +19,17 @@ public class EnemyCapsuleScript : MonoBehaviour
     Collider collider;
     System.Random rng = new System.Random();
 
+    GameObject bar_hp_max;
+    GameObject bar_hp_cur;
+
     /* game logic*/
     public float drop_chance = 1;
     public float aggro_range = 15.0f;
     public bool landed = false;
     public float shoot_cooldown = 0.5f;
     public float shoot_cooldown_left = 0;
-    public int hp = 1;
+    public int max_hp = 1;
+    public int hp;
     public int damage = 1;
     public int collision_damage = 1;
     public int projectile_speed = 1000;
@@ -50,6 +55,11 @@ public class EnemyCapsuleScript : MonoBehaviour
 
     void Start()
     {
+        hp = max_hp;
+        bar_hp_max = Instantiate(bar_prefab, transform.position + Vector3.up, Quaternion.identity, game_controller.transform);
+        bar_hp_cur = Instantiate(bar_prefab, transform.position + Vector3.up, Quaternion.identity, game_controller.transform);
+        bar_hp_max.GetComponent<Renderer>().material.color = Color.red;
+        bar_hp_cur.GetComponent<Renderer>().material.color = Color.green;
     }
 
     void Update()
@@ -80,44 +90,58 @@ public class EnemyCapsuleScript : MonoBehaviour
         if (dead)
             return;
 
+        Vector3 diff_vec = player_transf.position - transform.position;
+
+        Transform hp_max_t = bar_hp_max.GetComponent<Transform>();
+        Transform hp_cur_t = bar_hp_cur.GetComponent<Transform>();
+
+        float hp_cur_perc = (float)hp / max_hp;
+        hp_cur_t.localScale = new Vector3(hp_cur_perc, hp_cur_t.localScale.y, hp_cur_t.localScale.z);
+        // hp_max_t.localScale = new Vector3(1 - hp_cur_perc, hp_max_t.localScale.y, hp_max_t.localScale.z);
+
+        float hp_cur_x = (1 - hp_cur_perc) / 2;
+        // float hp_max_x = hp_cur_perc;
+
+        Vector3 perp = Vector3.Cross(-diff_vec, transform.up);
+
+        hp_max_t.SetPositionAndRotation(transform.position + Vector3.up * 1.3f,
+                player_transf.rotation);
+        hp_cur_t.SetPositionAndRotation(transform.position + Vector3.up * 1.3f + player_transf.forward * -0.001f - player_transf.right * hp_cur_x,
+                player_transf.rotation);
+
         if (landed && player.activeInHierarchy) {
-            Vector3 diff_vec = player_transf.position - transform.position;
             float euclidean_dist = (float)Math.Sqrt(Vector3.Dot(diff_vec, diff_vec));
             if (euclidean_dist > aggro_range)
                 return;
 
-            try {
-                nma.CalculatePath(player_transf.position, path_to_player);
+            nma.CalculatePath(player_transf.position, path_to_player);
 
-                float d = DistToPlayer();
-                if (d <= aggro_range && d > 0.001f) {
-                    nma.SetDestination(player_transf.position);
-                    Vector3 diff_vec_norm = Vector3.Normalize(diff_vec);
+            float d = DistToPlayer();
+            if (d <= aggro_range && d > 0.001f) {
+                nma.SetDestination(player_transf.position);
+                Vector3 diff_vec_norm = Vector3.Normalize(diff_vec);
 
-                    if (shoot_cooldown_left == 0) {
-                        GameObject proj = Instantiate(projectile_prefab, transform.position + diff_vec_norm,
-                                Quaternion.FromToRotation(Vector3.forward, diff_vec_norm), game_controller.transform);
-                        ProjectileScript props = proj.GetComponent<ProjectileScript>();
+                if (shoot_cooldown_left == 0) {
+                    GameObject proj = Instantiate(projectile_prefab, transform.position + diff_vec_norm,
+                            Quaternion.FromToRotation(Vector3.forward, diff_vec_norm), game_controller.transform);
+                    ProjectileScript props = proj.GetComponent<ProjectileScript>();
 
-                        props.damage = damage;
-                        props.speed = projectile_speed;
-                        props.duration = projectile_duration;
-                        props.scale = projectile_scale;
+                    props.damage = damage;
+                    props.speed = projectile_speed;
+                    props.duration = projectile_duration;
+                    props.scale = projectile_scale;
 
-                        shoot_cooldown_left = shoot_cooldown;
-                    }
-                    else {
-                        shoot_cooldown_left -= Time.deltaTime;
-                        shoot_cooldown_left = Math.Max(0, shoot_cooldown_left);
-                    }
+                    shoot_cooldown_left = shoot_cooldown;
                 }
                 else {
-                    nma.ResetPath();
+                    shoot_cooldown_left -= Time.deltaTime;
+                    shoot_cooldown_left = Math.Max(0, shoot_cooldown_left);
                 }
             }
-            catch (Exception e) {
-
+            else {
+                nma.ResetPath();
             }
+
         }
 
     }
@@ -167,6 +191,8 @@ public class EnemyCapsuleScript : MonoBehaviour
             Instantiate(reward_prefab, new Vector3(transform.position.x, 1, transform.position.z), Quaternion.identity, game_controller.transform);
         }
         death_anim_secs = death_anim_total;
+        Destroy(bar_hp_cur);
+        Destroy(bar_hp_max);
         Destroy(gameObject, death_anim_total);
     }
 }

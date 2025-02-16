@@ -176,11 +176,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   projectile_prefab: {fileID: 7092642468565383246, guid: 1fb43e4f503ca7ae792aeff4b743c301, type: 3}
   reward_prefab: {fileID: 3608288525038464593, guid: b0d12c336b3a508acab93a4b2b82e6cf, type: 3}
+  bar_prefab: {fileID: 4195781881758016944, guid: ed879ef89de369c11a8309a1cdcd6a13, type: 3}
   drop_chance: 1
   aggro_range: 15
   landed: 0
   shoot_cooldown: 0.5
   shoot_cooldown_left: 0
+  max_hp: 1
   hp: 3
   damage: 1
   collision_damage: 1
