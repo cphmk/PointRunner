@@ -74,6 +74,7 @@ public class GameController : MonoBehaviour
     GameObject go_UI_minimap;
     GameObject go_UI_play_button;
     GameObject go_UI_resume_button;
+    GameObject go_UI_mainmenu_button;
     GameObject go_UI_title;
     Button UI_play_button;
     Button UI_resume_button;
@@ -107,7 +108,8 @@ public class GameController : MonoBehaviour
         UI_play_button = go_UI_play_button.GetComponent<Button>();
         go_UI_resume_button = GameObject.Find("ResumeButton");
         UI_resume_button = go_UI_resume_button.GetComponent<Button>();
-        UI_mainmenu_button = GameObject.Find("MainMenuButton").GetComponent<Button>();
+        go_UI_mainmenu_button = GameObject.Find("MainMenuButton");
+        UI_mainmenu_button = go_UI_mainmenu_button.GetComponent<Button>();
         go_UI_minimap = GameObject.Find("MiniMap");
         go_UI_title = GameObject.Find("TitleText");
         UI_title = go_UI_title.GetComponent<TextMeshProUGUI>();
@@ -274,6 +276,7 @@ public class GameController : MonoBehaviour
     {
         go_main_cam.SetActive(false);
         go_UI_play_button.SetActive(false);
+        go_UI_mainmenu_button.SetActive(false);
         go_UI_title.SetActive(false);
         go_UI_minimap.SetActive(true);
         go_UI_player_stats.SetActive(true);
@@ -329,6 +332,7 @@ public class GameController : MonoBehaviour
         go_main_cam.SetActive(true);
         go_UI_minimap.SetActive(false);
         go_UI_play_button.SetActive(true);
+        go_UI_mainmenu_button.SetActive(true);
         go_UI_title.SetActive(true);
 
         go_minimap_marker.SetActive(false);
@@ -353,6 +357,7 @@ public class GameController : MonoBehaviour
         go_minimap_marker_goal.SetActive(true);
         go_minimap_marker.SetActive(true);
         go_UI_resume_button.SetActive(false);
+        go_UI_mainmenu_button.SetActive(false);
         Cursor.lockState = CursorLockMode.Locked;
     }
 
@@ -368,6 +373,7 @@ public class GameController : MonoBehaviour
         go_UI_minimap.SetActive(false);
         go_UI_play_button.SetActive(true);
         go_UI_resume_button.SetActive(false);
+        go_UI_mainmenu_button.SetActive(true);
         go_UI_title.SetActive(true);
         go_UI_player_stats.SetActive(false);
         go_UI_game_stats.SetActive(false);
