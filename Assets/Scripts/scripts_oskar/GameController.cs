@@ -309,8 +309,8 @@ public class GameController : MonoBehaviour
                         floor_transform.position.y + floor_transform.localScale.y + maze_height * offs + 2, y * maze_wall_width + maze_wall_width * offs),
                     Quaternion.identity, transform);
             EnemyCapsuleScript enemy_props = enemy.GetComponent<EnemyCapsuleScript>();
-            enemy_props.hp = 1 + game_level;
-            enemy_props.damage = 1 + game_level;
+            enemy_props.max_hp = 1 + 3 * game_level;
+            enemy_props.damage = 1 + 2 * game_level;
             enemy_props.aggro_range = 15 + 2 * game_level;
             enemy_props.shoot_cooldown = Math.Max(0.5f - (0.02f * game_level), 0.1f);
             enemy_props.collision_damage = 1 + game_level;

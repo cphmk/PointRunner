@@ -6,6 +6,7 @@ public class EnemyCapsuleScript : MonoBehaviour
 {
     public GameObject projectile_prefab;
     public GameObject reward_prefab;
+    public GameObject bar_prefab;
 
     GameObject game_controller;
     GameObject player;
@@ -18,13 +19,17 @@ public class EnemyCapsuleScript : MonoBehaviour
     Collider collider;
     System.Random rng = new System.Random();
 
+    GameObject bar_hp_max;
+    GameObject bar_hp_cur;
+
     /* game logic*/
     public float drop_chance = 1;
     public float aggro_range = 15.0f;
     public bool landed = false;
     public float shoot_cooldown = 0.5f;
     public float shoot_cooldown_left = 0;
-    public int hp = 1;
+    public int max_hp = 1;
+    public int hp;
     public int damage = 1;
     public int collision_damage = 1;
     public int projectile_speed = 1000;
@@ -50,6 +55,11 @@ public class EnemyCapsuleScript : MonoBehaviour
 
     void Start()
     {
+        hp = max_hp;
+        bar_hp_max = Instantiate(bar_prefab, transform.position + Vector3.up, Quaternion.identity, transform);
+        bar_hp_cur = Instantiate(bar_prefab, transform.position + Vector3.up, Quaternion.identity, transform);
+        bar_hp_max.GetComponent<Renderer>().material.color = Color.red;
+        bar_hp_cur.GetComponent<Renderer>().material.color = Color.green;
     }
 
     void Update()
@@ -86,38 +96,39 @@ public class EnemyCapsuleScript : MonoBehaviour
             if (euclidean_dist > aggro_range)
                 return;
 
-            try {
-                nma.CalculatePath(player_transf.position, path_to_player);
+            nma.CalculatePath(player_transf.position, path_to_player);
 
-                float d = DistToPlayer();
-                if (d <= aggro_range && d > 0.001f) {
-                    nma.SetDestination(player_transf.position);
-                    Vector3 diff_vec_norm = Vector3.Normalize(diff_vec);
+            float d = DistToPlayer();
+            if (d <= aggro_range && d > 0.001f) {
+                nma.SetDestination(player_transf.position);
+                Vector3 diff_vec_norm = Vector3.Normalize(diff_vec);
 
-                    if (shoot_cooldown_left == 0) {
-                        GameObject proj = Instantiate(projectile_prefab, transform.position + diff_vec_norm,
-                                Quaternion.FromToRotation(Vector3.forward, diff_vec_norm), game_controller.transform);
-                        ProjectileScript props = proj.GetComponent<ProjectileScript>();
+                if (shoot_cooldown_left == 0) {
+                    GameObject proj = Instantiate(projectile_prefab, transform.position + diff_vec_norm,
+                            Quaternion.FromToRotation(Vector3.forward, diff_vec_norm), game_controller.transform);
+                    ProjectileScript props = proj.GetComponent<ProjectileScript>();
 
-                        props.damage = damage;
-                        props.speed = projectile_speed;
-                        props.duration = projectile_duration;
-                        props.scale = projectile_scale;
+                    props.damage = damage;
+                    props.speed = projectile_speed;
+                    props.duration = projectile_duration;
+                    props.scale = projectile_scale;
 
-                        shoot_cooldown_left = shoot_cooldown;
-                    }
-                    else {
-                        shoot_cooldown_left -= Time.deltaTime;
-                        shoot_cooldown_left = Math.Max(0, shoot_cooldown_left);
-                    }
+                    shoot_cooldown_left = shoot_cooldown;
                 }
                 else {
-                    nma.ResetPath();
+                    shoot_cooldown_left -= Time.deltaTime;
+                    shoot_cooldown_left = Math.Max(0, shoot_cooldown_left);
                 }
             }
-            catch (Exception e) {
-
+            else {
+                nma.ResetPath();
             }
+
+            bar_hp_max.GetComponent<Transform>().SetPositionAndRotation(transform.position + Vector3.up,
+                    Quaternion.FromToRotation(Vector3.forward, diff_vec));
+            bar_hp_cur.GetComponent<Transform>().SetPositionAndRotation(transform.position + Vector3.up + Vector3.Normalize(diff_vec) * 0.01f,
+                    Quaternion.FromToRotation(Vector3.forward, diff_vec));
+
         }
 
     }
