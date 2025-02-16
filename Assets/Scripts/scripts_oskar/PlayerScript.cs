@@ -6,6 +6,7 @@ public class PlayerScript : MonoBehaviour
 {
     public GameObject projectile_prefab;
     public Color status_text_color = Color.green;
+    public GameObject bar_prefab;
 
     TextMeshProUGUI status_text;
     GameObject game_controller;

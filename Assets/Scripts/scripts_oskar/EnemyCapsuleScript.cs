@@ -56,8 +56,8 @@ public class EnemyCapsuleScript : MonoBehaviour
     void Start()
     {
         hp = max_hp;
-        bar_hp_max = Instantiate(bar_prefab, transform.position + Vector3.up, Quaternion.identity, transform);
-        bar_hp_cur = Instantiate(bar_prefab, transform.position + Vector3.up, Quaternion.identity, transform);
+        bar_hp_max = Instantiate(bar_prefab, transform.position + Vector3.up, Quaternion.identity, game_controller.transform);
+        bar_hp_cur = Instantiate(bar_prefab, transform.position + Vector3.up, Quaternion.identity, game_controller.transform);
         bar_hp_max.GetComponent<Renderer>().material.color = Color.red;
         bar_hp_cur.GetComponent<Renderer>().material.color = Color.green;
     }
@@ -90,8 +90,26 @@ public class EnemyCapsuleScript : MonoBehaviour
         if (dead)
             return;
 
+        Vector3 diff_vec = player_transf.position - transform.position;
+
+        Transform hp_max_t = bar_hp_max.GetComponent<Transform>();
+        Transform hp_cur_t = bar_hp_cur.GetComponent<Transform>();
+
+        float hp_cur_perc = (float)hp / max_hp;
+        hp_cur_t.localScale = new Vector3(hp_cur_perc, hp_cur_t.localScale.y, hp_cur_t.localScale.z);
+        // hp_max_t.localScale = new Vector3(1 - hp_cur_perc, hp_max_t.localScale.y, hp_max_t.localScale.z);
+
+        float hp_cur_x = (1 - hp_cur_perc) / 2;
+        // float hp_max_x = hp_cur_perc;
+
+        Vector3 perp = Vector3.Cross(-diff_vec, transform.up);
+
+        hp_max_t.SetPositionAndRotation(transform.position + Vector3.up * 1.3f,
+                player_transf.rotation);
+        hp_cur_t.SetPositionAndRotation(transform.position + Vector3.up * 1.3f + player_transf.forward * -0.001f - player_transf.right * hp_cur_x,
+                player_transf.rotation);
+
         if (landed && player.activeInHierarchy) {
-            Vector3 diff_vec = player_transf.position - transform.position;
             float euclidean_dist = (float)Math.Sqrt(Vector3.Dot(diff_vec, diff_vec));
             if (euclidean_dist > aggro_range)
                 return;
@@ -123,11 +141,6 @@ public class EnemyCapsuleScript : MonoBehaviour
             else {
                 nma.ResetPath();
             }
-
-            bar_hp_max.GetComponent<Transform>().SetPositionAndRotation(transform.position + Vector3.up,
-                    Quaternion.FromToRotation(Vector3.forward, diff_vec));
-            bar_hp_cur.GetComponent<Transform>().SetPositionAndRotation(transform.position + Vector3.up + Vector3.Normalize(diff_vec) * 0.01f,
-                    Quaternion.FromToRotation(Vector3.forward, diff_vec));
 
         }
 
@@ -178,6 +191,8 @@ public class EnemyCapsuleScript : MonoBehaviour
             Instantiate(reward_prefab, new Vector3(transform.position.x, 1, transform.position.z), Quaternion.identity, game_controller.transform);
         }
         death_anim_secs = death_anim_total;
+        Destroy(bar_hp_cur);
+        Destroy(bar_hp_max);
         Destroy(gameObject, death_anim_total);
     }
 }

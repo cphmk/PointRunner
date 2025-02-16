@@ -33,6 +33,7 @@ public class GameController : MonoBehaviour
     GameObject go_goal_excl;
     GameObject go_spawn;
     GameObject go_spawn_excl;
+    GameObject go_hp_bar;
     List<GameObject> go_enemies;
 
     Camera main_cam;
@@ -96,7 +97,7 @@ public class GameController : MonoBehaviour
         go_maze = GameObject.Find("Maze");
         go_floor = GameObject.Find("Floor");
         go_minimap_cam = GameObject.Find("MiniMapCamera");
-        go_minimap_marker = Instantiate(minimap_marker_prefab, new Vector3(0, 0, 0), Quaternion.identity, transform);
+        go_minimap_marker = Instantiate(minimap_marker_prefab, new Vector3(0, 0, 0), Quaternion.FromToRotation(Vector3.forward, Vector3.down), transform);
         go_enemies = new List<GameObject>();
 
         floor_transform = go_floor.GetComponent<Transform>();
@@ -116,6 +117,8 @@ public class GameController : MonoBehaviour
 
         go_UI_player_stats = GameObject.Find("PlayerStatsText");
         go_UI_game_stats = GameObject.Find("GameStatsText");
+        go_hp_bar = GameObject.Find("Slider");
+        go_hp_bar.GetComponent<Slider>().maxValue = 1;
         UI_player_stats_text = go_UI_player_stats.GetComponent<TextMeshProUGUI>();
         UI_game_stats_text = go_UI_game_stats.GetComponent<TextMeshProUGUI>();
         goal_text = GameObject.Find("GoalText").GetComponent<TextMeshProUGUI>();
@@ -162,6 +165,9 @@ public class GameController : MonoBehaviour
                 StopGame();
             }
             go_minimap_marker.GetComponent<Transform>().position = new Vector3(player_pos.x, player_pos.y + minimap_cam_distance - 10, player_pos.z);
+
+            Slider s = go_hp_bar.GetComponent<Slider>();
+            s.value = (float)game_player_props.hp / game_player_props.hp_max;
         }
 
         else if (!is_paused) {
@@ -184,7 +190,10 @@ public class GameController : MonoBehaviour
         }
 
         if (Input.GetKeyDown(KeyCode.Escape)) {
-            PauseGame();
+            if (!is_paused)
+                PauseGame();
+            // if (is_paused)
+            //     ResumeGame();
         }
 
 
@@ -248,15 +257,20 @@ public class GameController : MonoBehaviour
         foreach (Transform t in go_goal_excl.transform) {
             t.gameObject.GetComponent<Renderer>().material.color = new Color(0, 1, 0, 0.5f);
         }
-        go_minimap_marker_goal = Instantiate(minimap_marker_prefab, goal_pos + new Vector3(0, minimap_cam_distance - 10, 0), Quaternion.identity);
+        // go_minimap_marker_goal = Instantiate(minimap_marker_prefab, goal_pos + new Vector3(0, minimap_cam_distance - 10, 0), Quaternion.identity);
+        go_minimap_marker_goal = Instantiate(minimap_marker_prefab, goal_pos + new Vector3(0, minimap_cam_distance - 10, 0),
+                Quaternion.FromToRotation(Vector3.forward, Vector3.down), transform);
         go_minimap_marker_goal.GetComponent<Renderer>().material.color = new Color(0, 1, 0, 1);
+
 
         go_spawn = Instantiate(spawn_prefab, spawn_pos, Quaternion.identity, transform);
         go_spawn_excl = Instantiate(exclamation_mark_prefab, spawn_pos + Vector3.up * maze_wall_height * 1.5f + new Vector3(-12, 0, -12), Quaternion.identity, transform);
         foreach (Transform t in go_spawn_excl.transform) {
             t.gameObject.GetComponent<Renderer>().material.color = new Color(0, 0, 1, 0.5f);
         }
-        go_minimap_marker_spawn = Instantiate(minimap_marker_prefab, spawn_pos + new Vector3(0, minimap_cam_distance - 10, 0), Quaternion.identity);
+        // go_minimap_marker_spawn = Instantiate(minimap_marker_prefab, spawn_pos + new Vector3(0, minimap_cam_distance - 10, 0), Quaternion.identity);
+        go_minimap_marker_spawn = Instantiate(minimap_marker_prefab, spawn_pos + new Vector3(0, minimap_cam_distance - 10, 0),
+                Quaternion.FromToRotation(Vector3.forward, Vector3.down), transform);
         go_minimap_marker_spawn.GetComponent<Renderer>().material.color = new Color(0, 0, 1, 1);
 
         nav_mesh_surface.BuildNavMesh();
