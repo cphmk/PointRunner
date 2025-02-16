@@ -6,6 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/Menu.unity
+    guid: 4096ad10e9bc142438849fb34583d364
+  - enabled: 1
+    path: Assets/Scenes/CharacterSelection.unity
+    guid: 6dd876814e5892c459b2bfc00b5a918e
+  - enabled: 1
     path: Assets/Scenes/PointSmashCollectorScene.unity
     guid: 6015c0aabbc2b364c90d42fa090f7257
   - enabled: 1
