@@ -179,6 +179,18 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: fec8107908dd1694f99b94ef3c1c16fe, type: 2}
+    - target: {fileID: 7256210345331281620, guid: dfdd518083fb0c749979e3dc2802b368, type: 3}
+      propertyPath: dropChance
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7256210345331281620, guid: dfdd518083fb0c749979e3dc2802b368, type: 3}
+      propertyPath: lootPrefabs.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7256210345331281620, guid: dfdd518083fb0c749979e3dc2802b368, type: 3}
+      propertyPath: 'lootPrefabs.Array.data[0]'
+      value: 
+      objectReference: {fileID: 1498403948531744, guid: fa2c57d3f28a5e6419393e8bc3eeb32a, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -244,6 +256,18 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: fec8107908dd1694f99b94ef3c1c16fe, type: 2}
+    - target: {fileID: 7256210345331281620, guid: dfdd518083fb0c749979e3dc2802b368, type: 3}
+      propertyPath: dropChance
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7256210345331281620, guid: dfdd518083fb0c749979e3dc2802b368, type: 3}
+      propertyPath: lootPrefabs.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7256210345331281620, guid: dfdd518083fb0c749979e3dc2802b368, type: 3}
+      propertyPath: 'lootPrefabs.Array.data[0]'
+      value: 
+      objectReference: {fileID: 1498403948531744, guid: fa2c57d3f28a5e6419393e8bc3eeb32a, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -309,6 +333,18 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: fec8107908dd1694f99b94ef3c1c16fe, type: 2}
+    - target: {fileID: 7256210345331281620, guid: dfdd518083fb0c749979e3dc2802b368, type: 3}
+      propertyPath: dropChance
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7256210345331281620, guid: dfdd518083fb0c749979e3dc2802b368, type: 3}
+      propertyPath: lootPrefabs.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7256210345331281620, guid: dfdd518083fb0c749979e3dc2802b368, type: 3}
+      propertyPath: 'lootPrefabs.Array.data[0]'
+      value: 
+      objectReference: {fileID: 1498403948531744, guid: fa2c57d3f28a5e6419393e8bc3eeb32a, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -379,6 +415,18 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: fec8107908dd1694f99b94ef3c1c16fe, type: 2}
+    - target: {fileID: 7256210345331281620, guid: dfdd518083fb0c749979e3dc2802b368, type: 3}
+      propertyPath: dropChance
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7256210345331281620, guid: dfdd518083fb0c749979e3dc2802b368, type: 3}
+      propertyPath: lootPrefabs.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7256210345331281620, guid: dfdd518083fb0c749979e3dc2802b368, type: 3}
+      propertyPath: 'lootPrefabs.Array.data[0]'
+      value: 
+      objectReference: {fileID: 1498403948531744, guid: fa2c57d3f28a5e6419393e8bc3eeb32a, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -449,6 +497,18 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: fec8107908dd1694f99b94ef3c1c16fe, type: 2}
+    - target: {fileID: 7256210345331281620, guid: dfdd518083fb0c749979e3dc2802b368, type: 3}
+      propertyPath: dropChance
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7256210345331281620, guid: dfdd518083fb0c749979e3dc2802b368, type: 3}
+      propertyPath: lootPrefabs.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7256210345331281620, guid: dfdd518083fb0c749979e3dc2802b368, type: 3}
+      propertyPath: 'lootPrefabs.Array.data[0]'
+      value: 
+      objectReference: {fileID: 1498403948531744, guid: fa2c57d3f28a5e6419393e8bc3eeb32a, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -514,6 +574,18 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: fec8107908dd1694f99b94ef3c1c16fe, type: 2}
+    - target: {fileID: 7256210345331281620, guid: dfdd518083fb0c749979e3dc2802b368, type: 3}
+      propertyPath: dropChance
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7256210345331281620, guid: dfdd518083fb0c749979e3dc2802b368, type: 3}
+      propertyPath: lootPrefabs.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7256210345331281620, guid: dfdd518083fb0c749979e3dc2802b368, type: 3}
+      propertyPath: 'lootPrefabs.Array.data[0]'
+      value: 
+      objectReference: {fileID: 1498403948531744, guid: fa2c57d3f28a5e6419393e8bc3eeb32a, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -653,6 +725,63 @@ PrefabInstance:
       addedObject: {fileID: 657135243}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b736166d497cf884e8c2edf00909a8af, type: 3}
+--- !u!1001 &111389072
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1498403948531744, guid: fa2c57d3f28a5e6419393e8bc3eeb32a, type: 3}
+      propertyPath: m_Name
+      value: GoldCoin
+      objectReference: {fileID: 0}
+    - target: {fileID: 4244701375105762, guid: fa2c57d3f28a5e6419393e8bc3eeb32a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 77.346
+      objectReference: {fileID: 0}
+    - target: {fileID: 4244701375105762, guid: fa2c57d3f28a5e6419393e8bc3eeb32a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2.015
+      objectReference: {fileID: 0}
+    - target: {fileID: 4244701375105762, guid: fa2c57d3f28a5e6419393e8bc3eeb32a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -168.24873
+      objectReference: {fileID: 0}
+    - target: {fileID: 4244701375105762, guid: fa2c57d3f28a5e6419393e8bc3eeb32a, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 4244701375105762, guid: fa2c57d3f28a5e6419393e8bc3eeb32a, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 4244701375105762, guid: fa2c57d3f28a5e6419393e8bc3eeb32a, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4244701375105762, guid: fa2c57d3f28a5e6419393e8bc3eeb32a, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4244701375105762, guid: fa2c57d3f28a5e6419393e8bc3eeb32a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 4244701375105762, guid: fa2c57d3f28a5e6419393e8bc3eeb32a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4244701375105762, guid: fa2c57d3f28a5e6419393e8bc3eeb32a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: fa2c57d3f28a5e6419393e8bc3eeb32a, type: 3}
 --- !u!1001 &113399388
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -894,6 +1023,18 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: fec8107908dd1694f99b94ef3c1c16fe, type: 2}
+    - target: {fileID: 7256210345331281620, guid: dfdd518083fb0c749979e3dc2802b368, type: 3}
+      propertyPath: dropChance
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7256210345331281620, guid: dfdd518083fb0c749979e3dc2802b368, type: 3}
+      propertyPath: lootPrefabs.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7256210345331281620, guid: dfdd518083fb0c749979e3dc2802b368, type: 3}
+      propertyPath: 'lootPrefabs.Array.data[0]'
+      value: 
+      objectReference: {fileID: 1498403948531744, guid: fa2c57d3f28a5e6419393e8bc3eeb32a, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -959,6 +1100,18 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: fec8107908dd1694f99b94ef3c1c16fe, type: 2}
+    - target: {fileID: 7256210345331281620, guid: dfdd518083fb0c749979e3dc2802b368, type: 3}
+      propertyPath: dropChance
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7256210345331281620, guid: dfdd518083fb0c749979e3dc2802b368, type: 3}
+      propertyPath: lootPrefabs.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7256210345331281620, guid: dfdd518083fb0c749979e3dc2802b368, type: 3}
+      propertyPath: 'lootPrefabs.Array.data[0]'
+      value: 
+      objectReference: {fileID: 1498403948531744, guid: fa2c57d3f28a5e6419393e8bc3eeb32a, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1139,6 +1292,18 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: fec8107908dd1694f99b94ef3c1c16fe, type: 2}
+    - target: {fileID: 7256210345331281620, guid: dfdd518083fb0c749979e3dc2802b368, type: 3}
+      propertyPath: dropChance
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7256210345331281620, guid: dfdd518083fb0c749979e3dc2802b368, type: 3}
+      propertyPath: lootPrefabs.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7256210345331281620, guid: dfdd518083fb0c749979e3dc2802b368, type: 3}
+      propertyPath: 'lootPrefabs.Array.data[0]'
+      value: 
+      objectReference: {fileID: 1498403948531744, guid: fa2c57d3f28a5e6419393e8bc3eeb32a, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1157,6 +1322,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4985753242651127778, guid: 2fc4a167f16dae8429aac22841a048c1, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6394062907910857719, guid: 2fc4a167f16dae8429aac22841a048c1, type: 3}
       propertyPath: m_Name
       value: Soundtrack
@@ -1266,6 +1435,18 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: fec8107908dd1694f99b94ef3c1c16fe, type: 2}
+    - target: {fileID: 7256210345331281620, guid: dfdd518083fb0c749979e3dc2802b368, type: 3}
+      propertyPath: dropChance
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7256210345331281620, guid: dfdd518083fb0c749979e3dc2802b368, type: 3}
+      propertyPath: lootPrefabs.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7256210345331281620, guid: dfdd518083fb0c749979e3dc2802b368, type: 3}
+      propertyPath: 'lootPrefabs.Array.data[0]'
+      value: 
+      objectReference: {fileID: 1498403948531744, guid: fa2c57d3f28a5e6419393e8bc3eeb32a, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1295,7 +1476,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &657135243
 Transform:
   m_ObjectHideFlags: 0
@@ -1553,6 +1734,18 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: fec8107908dd1694f99b94ef3c1c16fe, type: 2}
+    - target: {fileID: 7256210345331281620, guid: dfdd518083fb0c749979e3dc2802b368, type: 3}
+      propertyPath: dropChance
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7256210345331281620, guid: dfdd518083fb0c749979e3dc2802b368, type: 3}
+      propertyPath: lootPrefabs.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7256210345331281620, guid: dfdd518083fb0c749979e3dc2802b368, type: 3}
+      propertyPath: 'lootPrefabs.Array.data[0]'
+      value: 
+      objectReference: {fileID: 1498403948531744, guid: fa2c57d3f28a5e6419393e8bc3eeb32a, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1885,6 +2078,18 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: fec8107908dd1694f99b94ef3c1c16fe, type: 2}
+    - target: {fileID: 7256210345331281620, guid: dfdd518083fb0c749979e3dc2802b368, type: 3}
+      propertyPath: dropChance
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7256210345331281620, guid: dfdd518083fb0c749979e3dc2802b368, type: 3}
+      propertyPath: lootPrefabs.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7256210345331281620, guid: dfdd518083fb0c749979e3dc2802b368, type: 3}
+      propertyPath: 'lootPrefabs.Array.data[0]'
+      value: 
+      objectReference: {fileID: 1498403948531744, guid: fa2c57d3f28a5e6419393e8bc3eeb32a, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1950,6 +2155,18 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: fec8107908dd1694f99b94ef3c1c16fe, type: 2}
+    - target: {fileID: 7256210345331281620, guid: dfdd518083fb0c749979e3dc2802b368, type: 3}
+      propertyPath: dropChance
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7256210345331281620, guid: dfdd518083fb0c749979e3dc2802b368, type: 3}
+      propertyPath: lootPrefabs.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7256210345331281620, guid: dfdd518083fb0c749979e3dc2802b368, type: 3}
+      propertyPath: 'lootPrefabs.Array.data[0]'
+      value: 
+      objectReference: {fileID: 1498403948531744, guid: fa2c57d3f28a5e6419393e8bc3eeb32a, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2160,6 +2377,18 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: fec8107908dd1694f99b94ef3c1c16fe, type: 2}
+    - target: {fileID: 7256210345331281620, guid: dfdd518083fb0c749979e3dc2802b368, type: 3}
+      propertyPath: dropChance
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7256210345331281620, guid: dfdd518083fb0c749979e3dc2802b368, type: 3}
+      propertyPath: lootPrefabs.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7256210345331281620, guid: dfdd518083fb0c749979e3dc2802b368, type: 3}
+      propertyPath: 'lootPrefabs.Array.data[0]'
+      value: 
+      objectReference: {fileID: 1498403948531744, guid: fa2c57d3f28a5e6419393e8bc3eeb32a, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2978,6 +3207,18 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: fec8107908dd1694f99b94ef3c1c16fe, type: 2}
+    - target: {fileID: 7256210345331281620, guid: dfdd518083fb0c749979e3dc2802b368, type: 3}
+      propertyPath: dropChance
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7256210345331281620, guid: dfdd518083fb0c749979e3dc2802b368, type: 3}
+      propertyPath: lootPrefabs.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7256210345331281620, guid: dfdd518083fb0c749979e3dc2802b368, type: 3}
+      propertyPath: 'lootPrefabs.Array.data[0]'
+      value: 
+      objectReference: {fileID: 1498403948531744, guid: fa2c57d3f28a5e6419393e8bc3eeb32a, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3048,6 +3289,18 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: fec8107908dd1694f99b94ef3c1c16fe, type: 2}
+    - target: {fileID: 7256210345331281620, guid: dfdd518083fb0c749979e3dc2802b368, type: 3}
+      propertyPath: dropChance
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7256210345331281620, guid: dfdd518083fb0c749979e3dc2802b368, type: 3}
+      propertyPath: lootPrefabs.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7256210345331281620, guid: dfdd518083fb0c749979e3dc2802b368, type: 3}
+      propertyPath: 'lootPrefabs.Array.data[0]'
+      value: 
+      objectReference: {fileID: 1498403948531744, guid: fa2c57d3f28a5e6419393e8bc3eeb32a, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3479,3 +3732,4 @@ SceneRoots:
   - {fileID: 1462281699}
   - {fileID: 124679222}
   - {fileID: 2018445397}
+  - {fileID: 111389072}

@@ -8,22 +8,25 @@ public class EnemyHealth : MonoBehaviour
 
     public Slider EnemyHealthbar; // Reference to the UI health bar
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created  
+    public GameObject[] lootPrefabs; // Assign different loot items in the Inspector
+    public float dropChance = 0.5f; // 50% chance to drop loot
+
+    private bool isDead = false; // Flag to track if the enemy has already died
+
     void Start()
     {
-        // Setting the CurrentHealth to MaxHealth, and calling the method UpdateHealthBar
         currentHealth = maxHealth;
         UpdateHealthBar();
     }
 
     public void TakeDamage(float damageAmount)
     {
-        currentHealth -= damageAmount;  // the amount of damage reduce the enemies health 
-        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth); // Logic to prevent negative health like -10
+        currentHealth -= damageAmount;
+        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
 
         UpdateHealthBar();
-        
-        if (currentHealth <= 0) // Lower than 0, and the enemies will die
+
+        if (currentHealth <= 0)
         {
             Die();
         }
@@ -31,30 +34,37 @@ public class EnemyHealth : MonoBehaviour
 
     void UpdateHealthBar()
     {
-        if (EnemyHealthbar != null)   // Making sure the healthbar is full
+        if (EnemyHealthbar != null)
         {
             EnemyHealthbar.value = currentHealth / maxHealth;
         }
     }
 
-    private bool isDead = false; // Flag to track if the enemy has already died
-
-void Die() // Handle player logic
-{
-    if (isDead) return; // ✅ Prevent multiple calls to Die()
-    isDead = true; // ✅ Mark the enemy as dead
-
-    Debug.Log(gameObject.name + " has died!");
-
-    if (ScoreManager.Instance != null)
+    void Die()
     {
-        ScoreManager.Instance.AddScore(10);
-        Debug.Log("Added 10 points!");
+        if (isDead) return; // Prevent multiple calls to Die()
+        isDead = true; 
+
+        Debug.Log(gameObject.name + " has died!");
+        
+        DropLoot(); // Drop loot before destroying
+
+        if (ScoreManager.Instance != null)
+        {
+            ScoreManager.Instance.AddScore(10);
+            Debug.Log("Added 10 points!");
+        }
+
+        Destroy(gameObject);
     }
 
-    Destroy(gameObject);
+    void DropLoot()
+    {
+        if (lootPrefabs.Length > 0 && Random.value < dropChance)
+        {
+            int randomIndex = Random.Range(0, lootPrefabs.Length);
+            Vector3 dropPosition = transform.position + Vector3.up * 0.5f; // Drop slightly above
+            Instantiate(lootPrefabs[randomIndex], dropPosition, Quaternion.Euler(90,0,0));
+        }
+    }
 }
-
-
-}
-
