@@ -469,6 +469,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   EnemyHealthbar: {fileID: 3031761881748013053}
+  lootPrefabs: []
+  dropChance: 0.5
 --- !u!54 &1689673282400862367
 Rigidbody:
   m_ObjectHideFlags: 0
