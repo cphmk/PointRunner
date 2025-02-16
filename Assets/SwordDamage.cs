@@ -37,6 +37,7 @@ public class SwordDamage : MonoBehaviour
                 if (enemyHealth != null)
                 {
                     enemyHealth.TakeDamage(damageAmount);
+                    Debug.Log("bullet hit");
 
                     // ✅ Play hit sound effect when damage is dealt
                     PlayHitSound();
