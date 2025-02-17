@@ -4,13 +4,13 @@ Spilleren navigerer gennem en udfordrende labyrint, hvor målet er at samle poin
 
 # Controls
 
-WASD -Movement
-Space - jump
-shift - run
-g - eagle view
-1 - sword
-2 - gun
-ESC - menu
+    WASD -Movement
+    Space - jump
+    shift - run
+    g - eagle view
+    1 - sword
+    2 - gun
+    ESC - menu
 
 ## 📦 Required Third-Party Assets
 
