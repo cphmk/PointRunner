@@ -12,6 +12,12 @@ Spilleren navigerer gennem en udfordrende labyrint, hvor målet er at samle poin
     2 - gun
     ESC - menu
 
+# Scenes
+
+        Menu
+        PointSmashCollectorScene
+        scenes_oskar/one
+
 ## 📦 Required Third-Party Assets
 
 This project uses third-party assets from the Unity Asset Store.  
